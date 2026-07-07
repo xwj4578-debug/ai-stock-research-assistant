@@ -1,0 +1,13 @@
+next_action:
+  high_risk: wait
+  buy_signal: research
+  default: observe
+
+thresholds:
+  high_risk: 70
+  buy_signal: 65
+
+templates:
+  wait: "Risk is elevated. Wait for risk release before increasing priority."
+  research: "Buy-point signal is active. Start research and verify sector support."
+  observe: "Keep observing until sector heat and capital confirmation improve."

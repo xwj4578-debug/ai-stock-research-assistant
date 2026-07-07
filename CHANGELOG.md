@@ -1,5 +1,21 @@
 # Changelog
 
+## v1.6.0 - Sprint 06 Research Engine Foundation
+
+- Added configuration-driven Research Engine YAML files for scoring, ranking, risk, recommendation, and market profiles.
+- Added Scoring, Risk, Recommendation, and config loading engines under Domain.
+- Added explainable score details to Research Queue items.
+- Updated ranking and risk/recommendation helpers to read YAML thresholds and weights.
+- Added unit tests for config loading, explainable scoring, risk thresholds, ranking, and score details.
+
+## v1.5.0 - Sprint 05 Data Engine Foundation
+
+- Added Application / Domain / Repository / Provider backend layers.
+- Added replaceable market provider contract with Mock, EastMoney, and AKShare provider boundaries.
+- Added repository caching, retry, and fallback behavior.
+- Moved Workspace v1 routes into an API controller router.
+- Added Data Engine tests for fallback, repository boundary, and service metadata.
+
 ## v1.4.1 - Sprint 04.2 UI Polish
 
 - Polished Chinese product copy, status labels, modal labels, and research workspace tone.

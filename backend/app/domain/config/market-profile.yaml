@@ -1,0 +1,21 @@
+markets:
+  cn_a:
+    name: "A Share"
+    currency: "CNY"
+    color_mode: "CN"
+    scoring_profile: "default"
+  hk:
+    name: "Hong Kong"
+    currency: "HKD"
+    color_mode: "CN"
+    scoring_profile: "default"
+  us:
+    name: "United States"
+    currency: "USD"
+    color_mode: "US"
+    scoring_profile: "default"
+  etf:
+    name: "ETF"
+    currency: "CNY"
+    color_mode: "CN"
+    scoring_profile: "default"

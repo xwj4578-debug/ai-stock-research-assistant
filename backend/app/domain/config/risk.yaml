@@ -1,0 +1,21 @@
+levels:
+  high:
+    min: 70
+    label: High
+  medium:
+    min: 45
+    label: Medium
+  low:
+    min: 0
+    label: Low
+
+signals:
+  high_volatility:
+    threshold: 75
+    message: "Risk score is elevated; review drawdown and position size first."
+  limit_up_divergence:
+    threshold: 80
+    message: "High short-term heat may create board-break risk."
+  volume_drop:
+    threshold: 65
+    message: "Volume confirmation is not strong enough."

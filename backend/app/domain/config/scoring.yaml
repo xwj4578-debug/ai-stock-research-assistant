@@ -1,0 +1,19 @@
+weights:
+  market: 20
+  sector: 20
+  trend: 20
+  volume: 15
+  capital: 15
+  risk: 10
+
+normalization:
+  max_input_score: 100
+  min_input_score: 0
+
+field_map:
+  market: market_score
+  sector: heat_score
+  trend: trend_score
+  volume: buy_point_score
+  capital: overall_score
+  risk: risk_score

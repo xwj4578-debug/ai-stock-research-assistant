@@ -22,6 +22,8 @@ This directory stores raw requirement inputs by lifecycle area so future iterati
 - `sprints/Sprint-04-Interactive-Workspace-Mock.md`
 - `sprints/Sprint-04_UI_Localization_Review.txt`
 - `sprints/Sprint-04.2-UI-Polish.md`
+- `sprints/Sprint-05-Data-Engine-Real-Data-Revised.md`
+- `sprints/Sprint-06-Research-Engine-Revised.md`
 
 ### Chapters
 

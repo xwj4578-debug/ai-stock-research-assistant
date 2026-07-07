@@ -18,15 +18,12 @@ from .radar import build_market_radar
 from .scoring import score_company, serialize_company
 from .stock_universe import find_a_share, find_a_share_in_text, search_a_shares
 from .stock_analysis import analyze_position, analyze_stock, compare_stocks, search_stock
+from .api import workspace_router
 from .workspace import (
     add_watchlist_item,
     build_workspace,
-    build_workspace_v1,
     copilot_metadata,
     copilot_reply,
-    list_watchlist,
-    queue_action,
-    telemetry_event,
 )
 
 BASE_DIR = Path(__file__).resolve().parents[2]
@@ -34,6 +31,7 @@ PROTOTYPE_DIR = BASE_DIR / "prototype" / "static"
 
 app = FastAPI(title="AI 股票研究助手", version="0.2.0")
 app.mount("/static", StaticFiles(directory=PROTOTYPE_DIR), name="static")
+app.include_router(workspace_router)
 
 
 @app.get("/")
@@ -298,11 +296,6 @@ def workspace_api() -> dict:
     return build_workspace()
 
 
-@app.get("/api/v1/workspace")
-def workspace_v1_api(module: str | None = None) -> dict:
-    return build_workspace_v1(module=module)
-
-
 @app.get("/api/workspace/copilot")
 def workspace_copilot_api() -> dict:
     return copilot_metadata()
@@ -321,37 +314,6 @@ def watchlist_add_api(payload: dict) -> dict:
 @app.delete("/api/watchlist/{item_id}")
 def watchlist_delete_api(item_id: str) -> dict:
     return {"ok": True, "deleted": item_id}
-
-
-@app.get("/api/v1/watchlist")
-def watchlist_v1_api(
-    page: int = Query(1, ge=1),
-    page_size: int = Query(20, ge=1, le=100),
-    q: str = "",
-    risk: str = "",
-    sort: str = Query("score", pattern="^(score|risk|code)$"),
-) -> dict:
-    return list_watchlist(page=page, page_size=page_size, q=q, risk=risk, sort=sort)
-
-
-@app.post("/api/v1/watchlist")
-def watchlist_v1_add_api(payload: dict) -> dict:
-    return add_watchlist_item(payload)
-
-
-@app.delete("/api/v1/watchlist/{item_id}")
-def watchlist_v1_delete_api(item_id: str) -> dict:
-    return {"ok": True, "deleted": item_id}
-
-
-@app.post("/api/v1/research-queue/{item_id}/{action}")
-def research_queue_action_api(item_id: str, action: str) -> dict:
-    return queue_action(item_id, action)
-
-
-@app.post("/api/v1/telemetry")
-def telemetry_api(payload: dict) -> dict:
-    return telemetry_event(payload)
 
 
 @app.get("/api/market/sector/{query}")

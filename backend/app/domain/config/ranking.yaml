@@ -1,0 +1,15 @@
+research_queue:
+  limit: 10
+  fields:
+    risk_score: 0.30
+    buy_point_score: 0.25
+    heat_score: 0.20
+    overall_score: 0.20
+    watchlist_boost: 0.05
+
+sector_leaders:
+  limit: 5
+  fields:
+    overall_score: 0.60
+    trend_score: 0.25
+    buy_point_score: 0.15
