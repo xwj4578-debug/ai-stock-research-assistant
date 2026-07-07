@@ -23,7 +23,5 @@ dist/
 build/
 node_modules/
 
-requirements/
-
 stock/
 stock-backtrader-web-app/

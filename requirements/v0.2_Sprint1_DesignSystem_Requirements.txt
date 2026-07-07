@@ -1,0 +1,112 @@
+AlphaLens AI Sprint 1 - Design System（设计系统） Version: v0.2
+
+========================== 目标 ==========================
+
+在正式开发任何页面之前，先建立统一的设计规范，确保整个产品视觉、交互和组件保持一致。
+
+本 Sprint 不开发业务功能，只建设设计基础。
+
+========================== 本阶段交付 ==========================
+
+1.  Design Token
+
+-   主色
+-   成功色
+-   风险色
+-   警告色
+-   中性色
+-   背景色
+-   字体颜色
+
+2.  Typography
+
+-   H1~H6
+-   Body
+-   Caption
+-   Label
+-   Number
+
+3.  Spacing 建立统一的 4 / 8 / 12 / 16 / 24 / 32 / 48 间距规范。
+
+4.  圆角规范
+
+-   Card
+-   Button
+-   Dialog
+-   Input
+
+5.  阴影规范
+
+-   Card Shadow
+-   Floating Shadow
+-   Modal Shadow
+
+6.  图标规范 推荐使用 Lucide Icons。
+
+7.  组件库（必须统一）
+
+-   Button
+-   Input
+-   Search Box
+-   Card
+-   AI Summary Card
+-   Score Card
+-   Risk Card
+-   Sector Card
+-   Stock Card
+-   Watchlist Card
+-   Dialog
+-   Drawer
+-   Toast
+-   Loading
+-   Empty State
+-   Error State
+-   Skeleton
+
+8.  图表规范 统一使用：
+
+-   ECharts（金融图表）
+-   TradingView Widget（K线）
+-   Recharts（业务统计）
+
+9.  页面布局 Desktop：
+
+-   左侧导航
+-   顶部导航
+-   主内容区
+-   AI Assistant 面板（可折叠）
+
+10. 响应式 支持：
+
+-   1920
+-   1440
+-   1280
+-   iPad
+-   Mobile（第二阶段）
+
+========================== 技术选型（建议） ==========================
+
+Frontend - Next.js - React - TypeScript - Tailwind CSS - shadcn/ui -
+TanStack Query - Zustand
+
+Charts - ECharts - TradingView
+
+Animation - Framer Motion
+
+Icons - Lucide
+
+========================== GitHub 本阶段任务 ==========================
+
+□ 创建 docs/design/ □ 创建 docs/design/design-system.md □ 创建
+docs/design/component-spec.md □ 创建 frontend/src/components/ □ 创建
+frontend/src/styles/ □ 创建 frontend/src/lib/ □ 创建 frontend/src/types/
+
+========================== 完成标准（Definition of Done）
+==========================
+
+1.  所有颜色、字体、间距都有规范。
+2.  所有基础组件都有文档。
+3.  能直接作为后续页面开发标准。
+4.  Sprint 2 可以直接开始设计首页。
+
+下一阶段： Sprint 2：首页完整产品设计（预计40~60页）
