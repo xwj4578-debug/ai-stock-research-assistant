@@ -7,3 +7,6 @@ Research Workspace 是 AlphaLens 的核心页面。
 ## Parts
 
 - `part-01-overview.md`
+- `part-02-hot-sectors-watchlist-copilot.md`
+- `part-03-interaction-components-data.md`
+- `part-04-api-state-ops.md`

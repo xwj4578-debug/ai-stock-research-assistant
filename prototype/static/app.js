@@ -2,8 +2,12 @@ const $ = (selector) => document.querySelector(selector);
 
 const state = {
   radar: null,
+  workspace: null,
   view: "workspace",
   watchlist: [],
+  selectedSector: "",
+  hiddenQueue: [],
+  completedQueue: [],
 };
 
 const fmt = (value, suffix = "") => {
@@ -91,7 +95,7 @@ function renderWorkspace(data, mode = "workspace") {
   const market = data.market || {};
   const summary = data.summary || {};
   const stats = market.stats || {};
-  const queue = buildResearchQueue(data);
+  const queue = buildResearchQueue(data).filter((item) => !state.hiddenQueue.includes(item.code));
   const risks = queue.filter((item) => (item.risk_score || 0) >= 70).slice(0, 4);
   $("#workspaceView").innerHTML = `
     <section class="workspace-header">
@@ -115,6 +119,7 @@ function renderWorkspace(data, mode = "workspace") {
         <h2>${esc(fmt(market.emotion_score))} 分</h2>
         <p>${esc(market.emotion_label || "判断待确认")}</p>
         <strong>${esc(market.advice || "")}</strong>
+        <div class="module-actions"><button class="ghost-button compact-button" type="button" data-refresh-module="marketPulse">Refresh</button></div>
       </div>
       <div class="pulse-grid">
         ${metric("两市成交额", `${fmt(stats.amount_yi)}亿`)}
@@ -131,6 +136,7 @@ function renderWorkspace(data, mode = "workspace") {
     <section class="panel ai-brief-card">
       <div class="section-title">
         <h3>AI Daily Brief</h3>
+        <button class="ghost-button compact-button" type="button" data-refresh-module="dailyBrief">Refresh</button>
         <span>不超过 300 字</span>
       </div>
       <p>${esc(buildDailyBrief(data))}</p>
@@ -144,10 +150,11 @@ function renderWorkspace(data, mode = "workspace") {
     <section class="panel">
       <div class="section-title">
         <h3>Research Queue</h3>
+        <button class="ghost-button compact-button" type="button" data-refresh-module="researchQueue">Refresh</button>
         <span>按风险最高、买点出现、热门板块、用户关注度排序</span>
       </div>
       <div class="queue-list">
-        ${queue.map(queueCard).join("") || `<div class="empty">研究队列为空</div>`}
+        ${queue.map(queueCardV2).join("") || `<div class="empty">研究队列为空</div>`}
       </div>
     </section>
 
@@ -155,10 +162,11 @@ function renderWorkspace(data, mode = "workspace") {
       <section class="panel">
         <div class="section-title">
           <h3>Hot Sectors</h3>
+          <button class="ghost-button compact-button" type="button" data-refresh-module="hotSectors">Refresh</button>
           <span>Part 2 将补完整交互</span>
         </div>
         <div class="sector-strip">
-          ${(data.sectors || []).slice(0, 4).map(sectorCard).join("")}
+          ${(data.sectors || []).slice(0, mode === "sector" ? 8 : 4).map(sectorCardV2).join("")}
         </div>
       </section>
 
@@ -188,6 +196,16 @@ function renderWorkspace(data, mode = "workspace") {
   `;
   $("#copilotText").textContent = nextActionText(data);
   bindCandidateActions($("#workspaceView"));
+  bindWorkspaceActions($("#workspaceView"));
+  if (mode === "sector") {
+    $("#workspaceView").insertAdjacentHTML("beforeend", sectorDetailSection(data));
+    bindWorkspaceActions($("#workspaceView"));
+  }
+  if (mode === "watchlist") {
+    $("#workspaceView").insertAdjacentHTML("beforeend", watchlistWorkspaceSection());
+    bindWatchlistActions($("#workspaceView"));
+  }
+  renderCopilotTools(data);
 }
 
 function modeLabel(mode) {
@@ -245,6 +263,32 @@ function queueCard(item) {
   `;
 }
 
+function queueCardV2(item) {
+  const done = state.completedQueue.includes(item.code);
+  const highRisk = (item.risk_score || 0) >= 70;
+  const activeBuy = (item.buy_point_score || 0) >= 65 && !highRisk;
+  const status = done ? "completed" : highRisk ? "risk-first" : activeBuy ? "tracking" : "pending";
+  const nextStep = highRisk ? "先确认风险是否释放" : activeBuy ? "观察买点是否持续成立" : "等待板块和资金确认";
+  return `
+    <article class="queue-card ${done ? "completed" : ""}">
+      <div>
+        <strong>${esc(item.name)}</strong>
+        <small>${esc(item.code)} · ${esc(item.industry || "industry pending")}</small>
+      </div>
+      <span>Score ${esc(fmt(item.overall_score))}</span>
+      <span>${esc(status)}</span>
+      <small>Risk ${esc(fmt(item.risk_score))} · Buy ${esc(fmt(item.buy_point_score))}</small>
+      <p>${esc(nextStep)}</p>
+      <div class="candidate-actions">
+        <button type="button" data-analyze="${esc(item.code)}">研究</button>
+        <button class="ghost-button" type="button" data-watch="${esc(item.code)}">加入 Watchlist</button>
+        <button class="ghost-button" type="button" data-queue-done="${esc(item.code)}">${done ? "已完成" : "标记完成"}</button>
+        <button class="ghost-button danger-button" type="button" data-queue-remove="${esc(item.code)}">移除任务</button>
+      </div>
+    </article>
+  `;
+}
+
 function riskAlert(item) {
   return `
     <article class="risk-alert">
@@ -285,6 +329,234 @@ function sectorCard(item) {
       <small>龙头：${esc(item.leader)}</small>
     </article>
   `;
+}
+
+function sectorCardV2(item) {
+  const name = item.name || "";
+  return `
+    <article class="sector-card sector-card-action" data-sector-card="${esc(name)}">
+      <div>
+        <strong>${esc(name)}</strong>
+        <span class="${trendClass(item.change_pct)}">${esc(fmt(item.change_pct, "%"))}</span>
+      </div>
+      <div class="heat-meter"><i style="width:${Math.max(0, Math.min(100, item.heat_score || 0))}%"></i></div>
+      <small>Heat ${esc(fmt(item.heat_score))} · Amount ${esc(fmt(item.amount_yi))} yi</small>
+      <small>Flow ${esc(fmt(item.main_net_inflow_yi))} yi · Limit up ${esc(fmt(item.limit_up_count))}</small>
+      <small>Leader: ${esc(item.leader || "")} · Core: ${esc(item.trend_core || item.leader || "")}</small>
+      <p>${esc(item.ai_summary || item.conclusion || item.catalyst || "")}</p>
+      <button class="ghost-button compact-button" type="button" data-sector="${esc(name)}">Open sector</button>
+    </article>
+  `;
+}
+
+function bindWorkspaceActions(root) {
+  root.querySelectorAll("[data-refresh-module]").forEach((button) => {
+    button.addEventListener("click", () => refreshWorkspaceModule(button.dataset.refreshModule));
+  });
+  root.querySelectorAll("[data-queue-done]").forEach((button) => {
+    button.addEventListener("click", async () => {
+      const code = button.dataset.queueDone;
+      if (!state.completedQueue.includes(code)) state.completedQueue.push(code);
+      await sendTelemetry("research_queue_completed", "researchQueue", { code });
+      renderWorkspace(state.radar, state.view);
+    });
+  });
+  root.querySelectorAll("[data-queue-remove]").forEach((button) => {
+    button.addEventListener("click", async () => {
+      const code = button.dataset.queueRemove;
+      if (!state.hiddenQueue.includes(code)) state.hiddenQueue.push(code);
+      await sendTelemetry("research_queue_removed", "researchQueue", { code });
+      renderWorkspace(state.radar, state.view);
+    });
+  });
+  root.querySelectorAll("[data-sector]").forEach((button) => {
+    button.addEventListener("click", () => {
+      state.selectedSector = button.dataset.sector;
+      sendTelemetry("sector_click", "hotSectors", { sector: state.selectedSector });
+      showView("sector");
+    });
+  });
+  root.querySelectorAll("[data-sector-card]").forEach((card) => {
+    card.addEventListener("click", (event) => {
+      if (event.target.closest("button")) return;
+      state.selectedSector = card.dataset.sectorCard;
+      sendTelemetry("sector_click", "hotSectors", { sector: state.selectedSector });
+      showView("sector");
+    });
+  });
+  root.querySelectorAll("[data-go-queue]").forEach((button) => {
+    button.addEventListener("click", () => showView("workspace"));
+  });
+}
+
+function sectorDetailSection(data) {
+  const sectors = data.sectors || [];
+  const sector = sectors.find((item) => item.name === state.selectedSector) || sectors[0] || {};
+  state.selectedSector = sector.name || state.selectedSector;
+  const members = (sector.members && sector.members.length ? sector.members : data.candidates || []).slice(0, 8);
+  return `
+    <section class="panel sector-detail">
+      <div class="section-title">
+        <h3>${esc(sector.name || "Sector Detail")}</h3>
+        <span>Members · Leaders · AI report · Heat history · Fund flow · News</span>
+      </div>
+      <div class="sector-detail-grid">
+        <article>
+          <span class="eyebrow">AI sector report</span>
+          <p>${esc(sector.ai_summary || sector.conclusion || sector.catalyst || "No sector summary yet.")}</p>
+          <div class="watch-tags">
+            <span>Leader ${esc(sector.leader || "Pending")}</span>
+            <span>Core ${esc(sector.trend_core || sector.leader || "Pending")}</span>
+            <span>Fund ${esc(fmt(sector.fund_flow ?? sector.main_net_inflow_yi))} yi</span>
+          </div>
+        </article>
+        <article>
+          <span class="eyebrow">Leader ranking</span>
+          <div class="mini-rank-list">
+            ${members.map((item, index) => `<button class="ghost-button mini-rank" type="button" data-analyze="${esc(item.code)}"><b>${index + 1}</b><span>${esc(item.name)}</span><small>${esc(item.code)} · ${esc(fmt(item.overall_score))}</small></button>`).join("") || `<div class="empty">No members yet.</div>`}
+          </div>
+        </article>
+      </div>
+      <div class="sector-news-row">
+        ${(sector.news || []).map((item) => `<span>${esc(item)}</span>`).join("") || `<span>Sector news source pending.</span>`}
+      </div>
+    </section>
+  `;
+}
+
+function riskLevel(item) {
+  const score = item.risk_score ?? item.risk ?? 0;
+  if (score >= 70 || item.risk_signal === "风险升高") return "High";
+  if (score >= 45) return "Medium";
+  return "Low";
+}
+
+function nextWatchAction(item) {
+  if ((item.risk_score || 0) >= 70 || item.risk_signal === "风险升高") return "放弃研究";
+  if ((item.buy_point_score || 0) >= 65 || item.buy_signal === "买点观察") return "买入";
+  return "等待";
+}
+
+function watchlistWorkspaceSection() {
+  if (!state.watchlist.length) {
+    return `
+      <section class="panel empty-state-panel">
+        <h3>开始研究第一只股票</h3>
+        <p>Watchlist is for possible future trades, not simple favorites.</p>
+        <button type="button" data-go-queue>前往 Research Queue</button>
+      </section>
+    `;
+  }
+  const rows = state.watchlist.slice().sort((a, b) => Number(Boolean(b.pinned)) - Number(Boolean(a.pinned)));
+  return `
+    <section class="panel">
+      <div class="section-title">
+        <h3>Watchlist</h3>
+        <span>Future possible trades · supports delete, pin, alert and completion</span>
+      </div>
+      <div class="watch-list workspace-watch-list">
+        ${rows.map(watchCardV2).join("")}
+      </div>
+    </section>
+  `;
+}
+
+function watchCardV2(item) {
+  const level = item.risk_level || riskLevel(item);
+  return `
+    <article class="watch-card watch-card-v2 ${item.pinned ? "pinned" : ""}">
+      <div>
+        <strong>${esc(item.name)} <small>${esc(item.code)}</small></strong>
+        <p>${esc(item.change_summary || item.reason || "Waiting for the next research update.")}</p>
+        <div class="watch-tags">
+          <span>Score ${esc(fmt(item.score))}</span>
+          <span class="${level === "High" ? "down" : level === "Low" ? "up" : ""}">Risk ${esc(level)}</span>
+          <span>Next ${esc(item.next_action || nextWatchAction(item))}</span>
+          ${item.alert ? "<span>Alert on</span>" : ""}
+          ${item.done ? "<span>Done</span>" : ""}
+        </div>
+      </div>
+      <div class="candidate-actions">
+        <button type="button" data-watch-analyze="${esc(item.code)}">查看报告</button>
+        <button class="ghost-button" type="button" data-pin-watch="${esc(item.code)}">${item.pinned ? "取消 Pin" : "Pin 到顶部"}</button>
+        <button class="ghost-button" type="button" data-alert-watch="${esc(item.code)}">${item.alert ? "取消提醒" : "设置提醒"}</button>
+        <button class="ghost-button" type="button" data-done-watch="${esc(item.code)}">标记完成</button>
+        <button class="ghost-button danger-button" type="button" data-remove-watch="${esc(item.code)}">删除</button>
+      </div>
+    </article>
+  `;
+}
+
+function bindWatchlistActions(root) {
+  root.querySelectorAll("[data-remove-watch]").forEach((button) => {
+    button.addEventListener("click", () => {
+      state.watchlist = state.watchlist.filter((item) => item.code !== button.dataset.removeWatch);
+      saveWatchlist();
+      sendTelemetry("watchlist_delete", "watchlist", { code: button.dataset.removeWatch });
+      showView("watchlist");
+    });
+  });
+  root.querySelectorAll("[data-pin-watch]").forEach((button) => {
+    button.addEventListener("click", () => updateWatchItem(button.dataset.pinWatch, (item) => ({ ...item, pinned: !item.pinned })));
+  });
+  root.querySelectorAll("[data-alert-watch]").forEach((button) => {
+    button.addEventListener("click", () => updateWatchItem(button.dataset.alertWatch, (item) => ({ ...item, alert: !item.alert })));
+  });
+  root.querySelectorAll("[data-done-watch]").forEach((button) => {
+    button.addEventListener("click", () => updateWatchItem(button.dataset.doneWatch, (item) => ({ ...item, done: true, status: "已完成" })));
+  });
+  root.querySelectorAll("[data-watch-analyze]").forEach((button) => {
+    button.addEventListener("click", () => {
+      $("#stockInput").value = button.dataset.watchAnalyze;
+      showView("analysis");
+      analyzeFirst();
+    });
+  });
+  bindCandidateActions(root);
+}
+
+function updateWatchItem(code, updater) {
+  state.watchlist = state.watchlist.map((item) => (item.code === code ? updater(item) : item));
+  saveWatchlist();
+  sendTelemetry("watchlist_add", "watchlist", { code: item.code });
+  showView("watchlist");
+}
+
+function renderCopilotTools(data) {
+  const body = $("#aiCopilot .copilot-body");
+  if (!body || body.dataset.ready === "true") return;
+  body.dataset.ready = "true";
+  body.insertAdjacentHTML("beforeend", `
+    <div class="copilot-tools">
+      <button class="ghost-button compact-button" type="button" data-copilot-intent="market">总结市场</button>
+      <button class="ghost-button compact-button" type="button" data-copilot-intent="compare">对比股票</button>
+      <button class="ghost-button compact-button" type="button" data-copilot-intent="sector">分析板块</button>
+      <button class="ghost-button compact-button" type="button" data-copilot-intent="score">解释评分</button>
+      <button class="ghost-button compact-button" type="button" data-copilot-intent="next">下一步任务</button>
+    </div>
+    <div id="copilotStructured" class="copilot-structured"></div>
+  `);
+  body.querySelectorAll("[data-copilot-intent]").forEach((button) => {
+    button.addEventListener("click", () => renderCopilotAnswer(button.dataset.copilotIntent));
+  });
+  renderCopilotAnswer("next");
+}
+
+function renderCopilotAnswer(intent) {
+  const target = $("#copilotStructured");
+  if (!target) return;
+  const data = state.radar || {};
+  const sector = (data.sectors || [])[0] || {};
+  const risk = (data.candidates || []).find((item) => (item.risk_score || 0) >= 70) || {};
+  const answers = {
+    market: ["原因", buildDailyBrief(data), "龙头", sector.leader || "Pending", "中军", sector.trend_core || sector.leader || "Pending", "风险", "风险分越高越危险，先看风险再看机会。", "后续观察点", "热点能否持续、成交额是否放大、风险股是否减少。"],
+    compare: ["原因", "先比较综合分、风险分、买点分，不把综合分当买卖信号。", "龙头", sector.leader || "Pending", "中军", sector.trend_core || sector.leader || "Pending", "风险", "高风险股只做解释，不直接进入交易判断。", "后续观察点", "把候选股加入 Watchlist 后继续跟踪变化。"],
+    sector: ["原因", sector.ai_summary || sector.conclusion || "板块热度需要继续确认。", "龙头", sector.leader || "Pending", "中军", sector.trend_core || sector.leader || "Pending", "风险", "如果板块热度下降，不追后排。", "后续观察点", "看龙头强度、趋势中军承接和资金流向。"],
+    score: ["原因", "评分用于排序研究优先级，不是交易指令。", "龙头", sector.leader || "Pending", "中军", sector.trend_core || sector.leader || "Pending", "风险", `${risk.name || "High risk names"} risk score ${fmt(risk.risk_score)}; higher means more dangerous.`, "后续观察点", "风险分升高时先降优先级。"],
+    next: ["原因", nextActionText(data), "龙头", sector.leader || "Pending", "中军", sector.trend_core || sector.leader || "Pending", "风险", "风险提示优先级高于买点提示。", "后续观察点", "先看 Hot Sectors，再处理 Research Queue，最后更新 Watchlist。"],
+  };
+  const rows = answers[intent] || answers.next;
+  target.innerHTML = `<dl>${rows.map((item, index) => index % 2 === 0 ? `<dt>${esc(item)}</dt>` : `<dd>${esc(item)}</dd>`).join("")}</dl>`;
 }
 
 function renderSectors(data) {
@@ -405,7 +677,12 @@ function addToWatchlist(code) {
     score: item.overall_score,
     status: "等待买点",
     risk_signal: item.risk_signal,
+    risk_score: item.risk_score,
+    risk_level: riskLevel(item),
     buy_signal: item.buy_signal,
+    next_action: nextWatchAction(item),
+    change_summary: item.candidate_reason || item.watch_reason,
+    source: "Research Queue",
     added_at: new Date().toLocaleDateString("zh-CN"),
   });
   saveWatchlist();
@@ -601,13 +878,74 @@ async function compareAll() {
   }
 }
 
+function workspaceSkeleton() {
+  return `
+    <section class="panel skeleton-panel">
+      <div class="skeleton-line wide"></div>
+      <div class="skeleton-grid">
+        <span></span><span></span><span></span><span></span>
+      </div>
+    </section>
+    <section class="panel skeleton-panel">
+      <div class="skeleton-line"></div>
+      <div class="skeleton-line short"></div>
+      <div class="skeleton-line wide"></div>
+    </section>
+  `;
+}
+
+function workspaceError(error) {
+  const id = `WS-${Date.now().toString(36).toUpperCase()}`;
+  return `
+    <section class="panel error-state-panel">
+      <span class="eyebrow">Workspace Error</span>
+      <h3>加载失败</h3>
+      <p>${esc(error?.message || "Unknown error")}</p>
+      <small>Error ID: ${esc(id)}</small>
+      <div class="candidate-actions">
+        <button id="retryWorkspace" type="button">Retry</button>
+        <button class="ghost-button" type="button">查看详情</button>
+      </div>
+    </section>
+  `;
+}
+
+async function refreshWorkspaceModule(module) {
+  setStatus(`Refreshing ${module}...`, true);
+  try {
+    const data = await getJson(`/api/v1/workspace?module=${encodeURIComponent(module)}`);
+    if (module === "hotSectors" && data.hotSectors) state.radar.sectors = data.hotSectors;
+    if (module === "researchQueue" && data.researchQueue) state.radar.candidates = data.researchQueue;
+    if (module === "marketPulse" && data.marketPulse) state.radar.market = data.marketPulse;
+    await sendTelemetry("module_refresh", module, { state: data.state });
+    renderWorkspace(state.radar, state.view);
+    setStatus(`${module} refreshed.`);
+  } catch (error) {
+    setStatus(`${module} refresh failed: ${error.message}`);
+  }
+}
+
+async function sendTelemetry(event, module, extra = {}) {
+  try {
+    await postJson("/api/v1/telemetry", { event, module, ...extra });
+  } catch {
+    // Telemetry must never block the research workflow.
+  }
+}
+
 async function loadRadar() {
+  $("#workspaceView").innerHTML = workspaceSkeleton();
   setStatus("正在加载市场情绪、热门板块和候选股票...", true);
   try {
-    state.radar = await getJson("/api/radar");
+    state.workspace = await getJson("/api/v1/workspace");
+    state.radar = state.workspace.raw || state.workspace;
+    state.radar.sectors = state.workspace.hotSectors || state.radar.sectors || [];
+    state.radar.summary = state.radar.summary || {};
     renderWorkspace(state.radar, state.view);
     setStatus("Research Workspace 已更新。先看市场，再看队列；风险提示优先。");
   } catch (error) {
+    $("#workspaceView").innerHTML = workspaceError(error);
+    $("#retryWorkspace")?.addEventListener("click", loadRadar);
     setStatus(`Research Workspace 加载失败：${error.message}`);
   }
 }
@@ -645,6 +983,7 @@ function init() {
   $("#analyzeButton").addEventListener("click", analyzeFirst);
   $("#compareButton").addEventListener("click", compareAll);
   loadRadar();
+  sendTelemetry("workspace_open", "workspace");
 }
 
 init();

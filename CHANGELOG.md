@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.2.0 - Research Workspace Parts 2-4
+
+- Added Hot Sectors interaction, sector detail, Watchlist cards, and AI Copilot structured actions.
+- Added workspace loading, empty, error, module refresh, queue completion, and queue removal states.
+- Added `/api/v1/workspace`, `/api/v1/watchlist`, queue action, and telemetry draft APIs.
+- Added Research Workspace Part 2, Part 3, and Part 4 documentation.
+
 ## v0.1.0 - Foundation
 
 - 建立 AlphaLens AI 产品仓库目录。
