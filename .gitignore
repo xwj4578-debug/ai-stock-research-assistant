@@ -22,6 +22,10 @@ cloudflared-*.err.log
 dist/
 build/
 node_modules/
+.next/
+dist/
+build/
+*.tsbuildinfo
 
 stock/
 stock-backtrader-web-app/

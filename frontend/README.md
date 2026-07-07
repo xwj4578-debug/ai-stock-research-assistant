@@ -1,9 +1,24 @@
-# Frontend
+# AlphaLens Frontend
 
-目标前端技术栈：
+First accessible Workspace page for Sprint 03.
 
-- React
-- Next.js
-- Tailwind CSS
+## Run
 
-当前可运行界面仍在 `prototype/static`，后续阶段会迁移为正式 Next.js 工程。
+```bash
+npm install
+npm run dev
+```
+
+Open:
+
+```text
+http://localhost:3000
+```
+
+## Current Scope
+
+- Next.js + React + TypeScript + Tailwind CSS.
+- Uses `lib/mock-data.ts`.
+- Does not connect to backend data.
+- Does not connect to real AI.
+- Includes the required risk notice: for investment research only, not investment advice.

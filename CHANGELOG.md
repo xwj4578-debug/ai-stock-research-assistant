@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.3.0 - Sprint 03 First Workspace Page
+
+- Reorganized `requirements/` into `foundation/`, `sprints/`, and `chapters/`.
+- Added a Next.js + React + TypeScript + Tailwind frontend under `frontend/`.
+- Implemented the first accessible mock Workspace page on port `3000`.
+- Added mock Market Pulse, AI Daily Brief, Research Queue, Hot Sectors, Watchlist, Risk Alerts, and AI Copilot modules.
+
 ## v1.2.0 - Research Workspace Parts 2-4
 
 - Added Hot Sectors interaction, sector detail, Watchlist cards, and AI Copilot structured actions.

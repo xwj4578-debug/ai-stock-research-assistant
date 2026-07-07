@@ -1,5 +1,23 @@
 # AlphaLens AI
 
+## Sprint 03 Frontend Workspace
+
+The first accessible Workspace page now lives in `frontend/`.
+
+```powershell
+cd frontend
+npm install
+npm run dev
+```
+
+Open:
+
+```text
+http://localhost:3000
+```
+
+This page uses mock data only. It does not connect to real stock data, backend APIs, or real AI. It is for investment research workflow prototyping only and does not constitute investment advice.
+
 AlphaLens AI 是一个面向 A 股研究的 AI 股票研究助手。它不是荐股或自动交易软件，而是帮助用户从市场、板块、个股、资金、基本面、消息面和风险维度建立研究流程的产品原型。
 
 ## v0.1 Foundation

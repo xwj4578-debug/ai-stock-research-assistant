@@ -1,19 +1,34 @@
 # Requirements
 
-该目录用于存放每次需求迭代的原始需求文件，保持需求、设计、开发、测试之间可追踪。
+This directory stores raw requirement inputs by lifecycle area so future iterations do not pile up in one flat folder.
 
-命名规范：
+## Structure
 
-```text
-vX.Y_章节名称.txt
-```
+- `foundation/`: repository foundation, governance, and long-term project rules.
+- `sprints/`: sprint-level build requirements.
+- `chapters/`: product design chapters and multi-part specs.
 
-当前迭代：
+## Current Index
 
-- `v0.1_Foundation_Requirements.txt`
-- `v0.2_Sprint1_DesignSystem_Requirements.txt`
-- `05-research-workspace-part1.md`
-- `05-research-workspace-part2.md`
-- `05-research-workspace-part3.md`
-- `05-research-workspace-part4.md`
-- `AlphaLens_Project_Foundation_Guide_v1.1.txt`
+### Foundation
+
+- `foundation/v0.1_Foundation_Requirements.txt`
+- `foundation/AlphaLens_Project_Foundation_Guide_v1.1.txt`
+
+### Sprints
+
+- `sprints/v0.2_Sprint1_DesignSystem_Requirements.txt`
+- `sprints/Sprint-03-Build-First-Workspace-Page.md`
+
+### Chapters
+
+- `chapters/chapter-05/05-research-workspace-part1.md`
+- `chapters/chapter-05/05-research-workspace-part2.md`
+- `chapters/chapter-05/05-research-workspace-part3.md`
+- `chapters/chapter-05/05-research-workspace-part4.md`
+
+## Naming Rules
+
+- Sprint files: `Sprint-XX-Short-Name.md`
+- Versioned foundation files: `vX.Y_Name.txt`
+- Chapter files: `chapter-XX/file-name.md`
