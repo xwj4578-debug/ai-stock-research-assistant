@@ -1,0 +1,18 @@
+{
+  "name": "AI 股票研究助手",
+  "short_name": "股票研究",
+  "description": "面向A股用户的移动端股票研究助手，聚合公司信息、财务趋势、公告消息、估值和评分依据。",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f5f7f8",
+  "theme_color": "#2563eb",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/static/app-icon.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

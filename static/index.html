@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0f172a" />
+    <title>AI 股票研究助手</title>
+    <link rel="manifest" href="/static/manifest.json" />
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar">
+        <div>
+          <span class="eyebrow">AI Stock Research</span>
+          <h1>AI 股票研究助手</h1>
+        </div>
+        <p>先看市场情绪和热门板块，再筛股票、建观察池、等买点。高分不是买入信号，风险提示优先。</p>
+      </header>
+
+      <nav class="page-tabs" aria-label="页面导航">
+        <button class="tab-button active" type="button" data-view="radar">市场雷达</button>
+        <button class="tab-button" type="button" data-view="sectors">板块排行</button>
+        <button class="tab-button" type="button" data-view="screener">股票筛选器</button>
+        <button class="tab-button" type="button" data-view="watchlist">观察池</button>
+        <button class="tab-button" type="button" data-view="analysis">个股分析</button>
+      </nav>
+
+      <section id="status" class="status-card">正在加载市场雷达...</section>
+
+      <section id="radarView" class="view-panel"></section>
+      <section id="sectorsView" class="view-panel" hidden></section>
+      <section id="screenerView" class="view-panel" hidden></section>
+      <section id="watchlistView" class="view-panel" hidden></section>
+
+      <section id="analysisView" class="view-panel" hidden>
+        <section class="search-card">
+          <label for="stockInput">股票名称 / 代码</label>
+          <textarea id="stockInput" rows="3" placeholder="例如：605500、森林包装、贵州茅台。多只股票可用逗号或换行分隔。"></textarea>
+          <div class="actions">
+            <button id="analyzeButton" type="button">分析股票</button>
+            <button id="compareButton" class="ghost-button" type="button">多股对比</button>
+          </div>
+        </section>
+        <section id="singleResult" class="result-stack"></section>
+        <section id="compareResult" class="result-stack"></section>
+      </section>
+
+      <footer class="risk-tip">
+        本工具只做研究参考，不直接荐股。先看板块，再看个股；先建观察池，再等买点；宁可错过，不要乱追。
+      </footer>
+    </main>
+
+    <script src="/static/app.js"></script>
+  </body>
+</html>
