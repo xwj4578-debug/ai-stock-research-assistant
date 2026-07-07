@@ -11,8 +11,8 @@
   "topbar.search": "搜索股票、板块、概念、ETF……",
   "workspace.title": "今日研究工作台",
   "workspace.description": "先判断市场，再选择板块，最后进入个股研究。页面使用模拟数据，仅用于产品原型验证。",
-  "workspace.badge": "模拟数据 · 未接后端 · 未接真实 AI",
-  "workspace.riskNotice": "本产品仅用于投资研究与学习，不构成任何投资建议。",
+  "workspace.badge": "演示数据 · 未接入后端 · 未接入真实 AI",
+  "workspace.riskNotice": "本产品仅用于投资研究与学习，不构成任何投资建议。市场有风险，投资需谨慎。",
   "workspace.emptyTitle": "暂无模拟数据",
   "workspace.emptyDescription": "当前用于验证空状态。切回 Normal 可查看完整工作台。",
   "marketPulse.title": "市场脉搏",
@@ -28,6 +28,7 @@
   "researchQueue.addWatch": "加入观察池",
   "researchQueue.complete": "标记完成",
   "researchQueue.restore": "恢复",
+  "researchQueue.score": "综合评分",
   "hotSectors.title": "热点板块",
   "hotSectors.eyebrow": "市场主线",
   "watchlist.title": "观察池",
@@ -36,6 +37,7 @@
   "watchlist.unpin": "取消置顶",
   "watchlist.delete": "删除",
   "watchlist.report": "查看报告",
+  "watchlist.risk": "风险",
   "watchlist.emptyTitle": "观察池为空",
   "watchlist.emptyDescription": "从今日研究任务中加入股票后，会在这里持续跟踪。",
   "riskAlerts.title": "风险提醒",
@@ -51,4 +53,12 @@
   "toast.deleted": "已从观察池删除",
   "toast.pinned": "已更新置顶状态",
   "toast.completed": "已更新任务状态"
+  ,"status.normal": "正常"
+  ,"status.loading": "加载"
+  ,"status.empty": "空状态"
+  ,"status.error": "错误"
+  ,"drawer.title": "股票研究"
+  ,"drawer.score": "综合评分"
+  ,"modal.sectorTitle": "板块详情"
+  ,"modal.reportTitle": "模拟报告"
 }

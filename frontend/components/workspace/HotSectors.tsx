@@ -1,5 +1,6 @@
 import type { HotSector } from "@/types/workspace";
 import { t } from "@/lib/i18n";
+import { marketColor } from "@/lib/market-color";
 import { Panel } from "@/components/workspace/Panel";
 
 type HotSectorsProps = {
@@ -18,7 +19,7 @@ export function HotSectors({ items, onOpen }: HotSectorsProps) {
                 <strong>{item.name}</strong>
                 <p className="mt-2 text-sm leading-6 text-workspace-muted">{item.reason}</p>
               </div>
-              <span className="text-sm font-bold text-workspace-success">{item.change}</span>
+              <span className={`text-sm font-bold ${marketColor.rise}`}>{item.change}</span>
             </div>
             <div className="mt-3 flex flex-wrap items-center gap-2 text-xs">
               <span className="rounded-full border border-workspace-border px-2 py-1 text-workspace-muted">热度 {item.score}</span>

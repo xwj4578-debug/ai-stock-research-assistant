@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { type KeyboardEvent, useState } from "react";
 import { Bot, Send } from "lucide-react";
 import { getMockAiAnswer } from "@/lib/mock-ai";
 import { t } from "@/lib/i18n";
@@ -34,6 +34,12 @@ export function AiCopilot() {
     }, 600);
   }
 
+  function handleKeyDown(event: KeyboardEvent<HTMLTextAreaElement>) {
+    if (event.key !== "Enter" || event.shiftKey) return;
+    event.preventDefault();
+    ask(input);
+  }
+
   return (
     <aside className="flex max-h-[calc(100vh-64px)] flex-col border-l border-workspace-border bg-workspace-panel p-5">
       <div className="flex items-center gap-3">
@@ -62,8 +68,10 @@ export function AiCopilot() {
       <div className="mt-5 min-h-0 flex-1 space-y-3 overflow-y-auto rounded-md border border-workspace-border bg-workspace-card p-3">
         <span className="text-xs font-bold uppercase tracking-[0.16em] text-workspace-primary">{t("copilot.analysis")}</span>
         {messages.map((message, index) => (
-          <div key={`${message.role}-${index}`} className={`rounded-md p-3 text-sm leading-6 ${message.role === "ai" ? "bg-workspace-bg text-workspace-muted" : "bg-workspace-primary text-white"}`}>
-            {message.text}
+          <div key={`${message.role}-${index}`} className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}>
+            <div className={`max-w-[88%] whitespace-pre-line rounded-md p-3 text-sm leading-6 ${message.role === "ai" ? "bg-workspace-bg text-workspace-muted" : "bg-workspace-primary text-white"}`}>
+              {message.text}
+            </div>
           </div>
         ))}
         {loading && <div className="rounded-md bg-workspace-bg p-3 text-sm text-workspace-muted">AI 正在生成模拟回复...</div>}
@@ -75,6 +83,7 @@ export function AiCopilot() {
           placeholder={t("copilot.placeholder")}
           value={input}
           onChange={(event) => setInput(event.target.value)}
+          onKeyDown={handleKeyDown}
         />
         <button className="mt-3 inline-flex h-10 w-full items-center justify-center gap-2 rounded-md bg-workspace-primary text-sm font-bold text-white hover:brightness-110 active:scale-[0.98]" type="button" onClick={() => ask(input)}>
           <Send className="h-4 w-4" />

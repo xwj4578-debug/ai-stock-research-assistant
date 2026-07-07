@@ -15,6 +15,8 @@ body {
 
 body {
   overflow-x: hidden;
+  color: #f9fafb;
+  font-family: Inter, "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
 }
 
 button,
@@ -25,6 +27,41 @@ textarea {
 
 button {
   cursor: pointer;
+}
+
+button,
+a,
+input,
+textarea {
+  transition: all 160ms ease;
+}
+
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid #6a9dff;
+  outline-offset: 2px;
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0b1020;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #263244;
+  border-radius: 999px;
 }
 
 ::selection {

@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.4.1 - Sprint 04.2 UI Polish
+
+- Polished Chinese product copy, status labels, modal labels, and research workspace tone.
+- Added A-share market color configuration with rise/fall color classes.
+- Improved Research Queue density, two-line reason clamp, card hover/focus states, and risk notice styling.
+- Improved AI Copilot chat layout with Enter-to-send and Shift+Enter newline behavior.
+
 ## v1.4.0 - Sprint 04 Interactive Workspace Mock
 
 - Added interactive mock behavior for daily brief, research queue, sector detail, watchlist, report modal, and AI Copilot.

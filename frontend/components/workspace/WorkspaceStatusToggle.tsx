@@ -1,3 +1,5 @@
+import { t } from "@/lib/i18n";
+
 export type WorkspaceStatus = "normal" | "loading" | "empty" | "error";
 
 type WorkspaceStatusToggleProps = {
@@ -6,10 +8,10 @@ type WorkspaceStatusToggleProps = {
 };
 
 const options: Array<{ value: WorkspaceStatus; label: string }> = [
-  { value: "normal", label: "Normal" },
-  { value: "loading", label: "Loading" },
-  { value: "empty", label: "Empty" },
-  { value: "error", label: "Error" }
+  { value: "normal", label: t("status.normal") },
+  { value: "loading", label: t("status.loading") },
+  { value: "empty", label: t("status.empty") },
+  { value: "error", label: t("status.error") }
 ];
 
 export function WorkspaceStatusToggle({ value, onChange }: WorkspaceStatusToggleProps) {

@@ -1,5 +1,6 @@
 import { X } from "lucide-react";
 import type { HotSector } from "@/types/workspace";
+import { t } from "@/lib/i18n";
 
 type SectorDetailModalProps = {
   sector: HotSector | null;
@@ -15,7 +16,7 @@ export function SectorDetailModal({ sector, open, onClose }: SectorDetailModalPr
       <section className="w-full max-w-3xl rounded-lg border border-workspace-border bg-workspace-panel shadow-terminal">
         <header className="flex items-start justify-between gap-4 border-b border-workspace-border p-5">
           <div>
-            <span className="text-xs font-bold uppercase tracking-[0.16em] text-workspace-primary">Sector Detail</span>
+            <span className="text-xs font-bold text-workspace-primary">{t("modal.sectorTitle")}</span>
             <h2 className="mt-2 text-2xl font-black">{sector.name}</h2>
             <p className="mt-1 text-sm text-workspace-success">{sector.change} · 热度 {sector.score}</p>
           </div>

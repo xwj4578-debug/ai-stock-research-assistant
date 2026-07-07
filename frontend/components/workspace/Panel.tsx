@@ -10,7 +10,7 @@ type PanelProps = {
 
 export function Panel({ title, eyebrow, action, children, className = "" }: PanelProps) {
   return (
-    <section className={`rounded-lg border border-workspace-border bg-workspace-panel p-5 shadow-terminal ${className}`}>
+    <section className={`rounded-2xl border border-workspace-border bg-workspace-panel p-5 shadow-terminal transition hover:border-workspace-border ${className}`}>
       {(title || eyebrow || action) && (
         <div className="mb-4 flex items-start justify-between gap-4">
           <div>

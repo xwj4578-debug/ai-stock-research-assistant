@@ -112,13 +112,13 @@ export function WorkspacePage() {
             </div>
             <RiskAlerts items={workspaceData.riskAlerts} />
           </div>
-          <footer className="rounded-lg border border-workspace-border bg-workspace-panel p-4 text-sm leading-6 text-workspace-muted">
+          <footer className="rounded-lg border border-workspace-border bg-workspace-panel p-3 text-xs leading-6 text-workspace-muted">
             {t("workspace.riskNotice")}
           </footer>
         </div>
       )}
 
-      {toast && <div className="fixed bottom-5 left-1/2 z-[60] -translate-x-1/2 rounded-md border border-workspace-border bg-workspace-card px-4 py-3 text-sm font-bold text-workspace-text shadow-terminal">{toast}</div>}
+      {toast && <div className="fixed bottom-5 left-1/2 z-[60] -translate-x-1/2 rounded-xl border border-workspace-border bg-workspace-card px-4 py-3 text-sm font-bold text-workspace-text shadow-terminal">{toast}</div>}
       <StockResearchDrawer stock={selectedStock} open={Boolean(selectedStock)} onClose={() => setSelectedStock(null)} />
       <SectorDetailModal sector={selectedSector} open={Boolean(selectedSector)} onClose={() => setSelectedSector(null)} />
       <MockReportModal open={Boolean(reportTitle)} title={reportTitle || undefined} onClose={() => setReportTitle(null)} />

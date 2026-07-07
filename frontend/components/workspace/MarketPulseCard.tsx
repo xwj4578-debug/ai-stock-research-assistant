@@ -1,6 +1,7 @@
 import { Activity, ArrowDownRight, ArrowUpRight, Flame } from "lucide-react";
 import type { MarketPulse } from "@/types/workspace";
 import { t } from "@/lib/i18n";
+import { marketColor } from "@/lib/market-color";
 import { Panel } from "@/components/workspace/Panel";
 
 type MarketPulseCardProps = {
@@ -8,7 +9,7 @@ type MarketPulseCardProps = {
 };
 
 function Metric({ label, value, tone = "neutral" }: { label: string; value: string | number; tone?: "neutral" | "up" | "down" }) {
-  const color = tone === "up" ? "text-workspace-success" : tone === "down" ? "text-workspace-danger" : "text-workspace-text";
+  const color = tone === "up" ? marketColor.rise : tone === "down" ? marketColor.fall : "text-workspace-text";
   return (
     <div className="rounded-md border border-workspace-border bg-workspace-card p-3">
       <span className="block text-xs text-workspace-muted">{label}</span>
@@ -20,7 +21,7 @@ function Metric({ label, value, tone = "neutral" }: { label: string; value: stri
 export function MarketPulseCard({ data }: MarketPulseCardProps) {
   return (
     <Panel title={t("marketPulse.title")} eyebrow={t("marketPulse.eyebrow")}>
-      <div className="grid gap-5 xl:grid-cols-[220px_minmax(0,1fr)]">
+      <div className="grid gap-4 xl:grid-cols-[220px_minmax(0,1fr)]">
         <div className="rounded-lg border border-workspace-border bg-gradient-to-b from-[#1D2A45] to-workspace-card p-4">
           <div className="flex items-center gap-2 text-workspace-muted">
             <Activity className="h-4 w-4" />
@@ -28,7 +29,7 @@ export function MarketPulseCard({ data }: MarketPulseCardProps) {
           </div>
           <div className="mt-4 flex items-end gap-2">
             <strong className="text-6xl leading-none text-workspace-text">{data.score}</strong>
-            <span className="pb-2 text-workspace-success">{data.status}</span>
+            <span className={`pb-2 ${marketColor.rise}`}>{data.status}</span>
           </div>
           <p className="mt-4 text-sm leading-6 text-workspace-muted">{data.summary}</p>
         </div>
@@ -47,7 +48,7 @@ export function MarketPulseCard({ data }: MarketPulseCardProps) {
             </span>
             <strong className="mt-1 flex items-center gap-1 text-base text-workspace-success">
               <ArrowUpRight className="h-4 w-4" />
-              修复
+              情绪修复
             </strong>
           </div>
         </div>

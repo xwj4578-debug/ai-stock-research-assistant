@@ -1,5 +1,6 @@
 import { X } from "lucide-react";
 import type { ResearchQueueItem } from "@/types/workspace";
+import { t } from "@/lib/i18n";
 
 type StockResearchDrawerProps = {
   stock: ResearchQueueItem | null;
@@ -15,7 +16,7 @@ export function StockResearchDrawer({ stock, open, onClose }: StockResearchDrawe
       <aside className="ml-auto flex h-full w-full max-w-xl flex-col border-l border-workspace-border bg-workspace-panel shadow-terminal">
         <header className="flex items-start justify-between gap-4 border-b border-workspace-border p-5">
           <div>
-            <span className="text-xs font-bold uppercase tracking-[0.16em] text-workspace-primary">Stock Research</span>
+            <span className="text-xs font-bold text-workspace-primary">{t("drawer.title")}</span>
             <h2 className="mt-2 text-2xl font-black">{stock.name}</h2>
             <p className="mt-1 text-sm text-workspace-muted">{stock.code} · {stock.sector || "板块待确认"}</p>
           </div>
@@ -26,7 +27,7 @@ export function StockResearchDrawer({ stock, open, onClose }: StockResearchDrawe
 
         <div className="flex-1 space-y-4 overflow-y-auto p-5">
           <div className="rounded-lg border border-workspace-border bg-workspace-card p-4">
-            <span className="text-xs text-workspace-muted">综合评分</span>
+            <span className="text-xs text-workspace-muted">{t("drawer.score")}</span>
             <strong className="mt-1 block text-4xl text-workspace-success">{stock.score}</strong>
           </div>
           <InfoBlock title="AI 核心结论" text={stock.conclusion || stock.reason} />

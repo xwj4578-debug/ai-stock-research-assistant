@@ -29,11 +29,11 @@ export function Watchlist({ items, onPin, onDelete, onReport }: WatchlistProps) 
                 <strong>{item.name}</strong>
                 <span className="ml-2 text-xs text-workspace-muted">{item.code}</span>
               </div>
-              <strong className="text-workspace-success">{item.score}</strong>
+              <strong className="text-workspace-rise">{item.score}</strong>
             </div>
             <div className="mt-3 flex flex-wrap gap-2 text-xs">
               <span className={clsx("rounded-full border border-workspace-border px-2 py-1 font-semibold", riskClass[item.risk])}>
-                Risk {item.risk}
+                {t("watchlist.risk")} {item.risk}
               </span>
               <span className="rounded-full border border-workspace-border px-2 py-1 text-workspace-muted">{item.nextAction}</span>
             </div>

@@ -1,4 +1,5 @@
 import { X } from "lucide-react";
+import { t } from "@/lib/i18n";
 
 type MockReportModalProps = {
   open: boolean;
@@ -14,7 +15,7 @@ export function MockReportModal({ open, title = "AI 长报告", onClose }: MockR
       <section className="w-full max-w-2xl rounded-lg border border-workspace-border bg-workspace-panel shadow-terminal">
         <header className="flex items-center justify-between border-b border-workspace-border p-5">
           <div>
-            <span className="text-xs font-bold uppercase tracking-[0.16em] text-workspace-primary">Mock Report</span>
+            <span className="text-xs font-bold text-workspace-primary">{t("modal.reportTitle")}</span>
             <h2 className="mt-2 text-xl font-black">{title}</h2>
           </div>
           <button className="grid h-9 w-9 place-items-center rounded-md border border-workspace-border text-workspace-muted" type="button" onClick={onClose} aria-label="Close">
