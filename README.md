@@ -28,6 +28,18 @@ AlphaLens AI 是一个面向 A 股研究的 AI 股票研究助手。它不是荐
 - `frontend/src/lib/`：前端工具目录入口
 - `frontend/src/types/`：类型目录入口
 
+## Chapter 05 Research Workspace
+
+当前原型已经开始按 Research Workspace 设计重构。入口页面不再是传统首页，而是用户每天进入系统后的工作空间，包含：
+
+- Market Pulse
+- AI Daily Brief
+- Research Queue
+- Hot Sectors 预览
+- Watchlist Changes
+- Risk Alerts
+- AI Copilot
+
 暂不开发：
 
 - 自动交易

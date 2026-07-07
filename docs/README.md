@@ -15,3 +15,4 @@
 - `api.md`：API
 - `prompt.md`：Prompt
 - `roadmap.md`：Roadmap
+- `research-workspace-part1.md`：Research Workspace 第一部分

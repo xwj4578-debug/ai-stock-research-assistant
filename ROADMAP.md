@@ -20,6 +20,11 @@
 - 完成市场首页和股票详情页信息架构。
 - 定义观察池、评分、AI 报告和聊天流程。
 
+## v1.0 Chapter 05 Research Workspace
+
+- Part 1：Workspace Layout、Sidebar、Market Pulse、AI Daily Brief、Research Queue。
+- Part 2：Hot Sectors、Watchlist、AI Copilot、页面交互、Loading / Empty / Error、API 设计。
+
 ## v0.4 UI Foundation
 
 - 建立 Design System。

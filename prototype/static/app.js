@@ -2,7 +2,7 @@ const $ = (selector) => document.querySelector(selector);
 
 const state = {
   radar: null,
-  view: "radar",
+  view: "workspace",
   watchlist: [],
 };
 
@@ -69,13 +69,15 @@ function saveWatchlist() {
 
 function showView(view) {
   state.view = view;
-  document.querySelectorAll(".tab-button").forEach((button) => {
+  document.querySelectorAll(".side-nav").forEach((button) => {
     button.classList.toggle("active", button.dataset.view === view);
   });
-  ["radar", "sectors", "screener", "watchlist", "analysis"].forEach((name) => {
-    $(`#${name}View`).hidden = name !== view;
-  });
-  if (view === "watchlist") renderWatchlist();
+  const analysisViews = new Set(["stocks", "analysis"]);
+  $("#workspaceView").hidden = analysisViews.has(view);
+  $("#analysisView").hidden = !analysisViews.has(view);
+  if (view === "market" || view === "sector" || view === "watchlist" || view === "reports" || view === "review" || view === "settings") {
+    renderWorkspace(state.radar, view);
+  }
 }
 
 function emotionClass(score) {
@@ -85,72 +87,178 @@ function emotionClass(score) {
   return "bad";
 }
 
-function renderRadar(data) {
+function renderWorkspace(data, mode = "workspace") {
   const market = data.market || {};
   const summary = data.summary || {};
   const stats = market.stats || {};
-  $("#radarView").innerHTML = `
-    <section class="panel radar-hero ${emotionClass(market.emotion_score || 0)}">
+  const queue = buildResearchQueue(data);
+  const risks = queue.filter((item) => (item.risk_score || 0) >= 70).slice(0, 4);
+  $("#workspaceView").innerHTML = `
+    <section class="workspace-header">
       <div>
-        <span class="eyebrow">今日市场情绪</span>
+        <span class="eyebrow">${esc(modeLabel(mode))}</span>
+        <h1>Research Workspace</h1>
+        <p>Research > Decision。AI 负责收集、整理、分析、总结和提醒；用户负责判断、决策和交易。</p>
+      </div>
+      <div class="workflow-steps" aria-label="研究流程">
+        <span>市场</span>
+        <span>板块</span>
+        <span>队列</span>
+        <span>风险</span>
+        <span>下一步</span>
+      </div>
+    </section>
+
+    <section class="panel market-pulse ${emotionClass(market.emotion_score || 0)}">
+      <div>
+        <span class="eyebrow">Market Pulse</span>
         <h2>${esc(fmt(market.emotion_score))} 分</h2>
         <p>${esc(market.emotion_label || "判断待确认")}</p>
         <strong>${esc(market.advice || "")}</strong>
       </div>
-      <div class="radar-summary">
-        ${metric("重点关注股票", fmt(summary.focus_count))}
-        ${metric("触发买点股票", fmt(summary.buy_signal_count))}
-        ${metric("风险升高股票", fmt(summary.risk_count), "down")}
-        ${metric("热门方向", (summary.focus_directions || []).join("、") || "待确认")}
-      </div>
-    </section>
-
-    <section class="panel">
-      <div class="section-title">
-        <h3>市场宽度</h3>
-        <span>${esc(stats.source || "公开行情聚合")}</span>
-      </div>
-      <div class="metric-grid">
+      <div class="pulse-grid">
         ${metric("两市成交额", `${fmt(stats.amount_yi)}亿`)}
         ${metric("上涨家数", fmt(stats.rising_count), "up")}
         ${metric("下跌家数", fmt(stats.falling_count), "down")}
         ${metric("涨停家数", fmt(stats.limit_up_count), "up")}
         ${metric("跌停家数", fmt(stats.limit_down_count), "down")}
         ${metric("炸板率估算", fmt(stats.failed_limit_rate, "%"))}
+        ${metric("连板高度", "数据源待接入")}
+        ${metric("热门方向", (summary.focus_directions || []).join("、") || "待确认")}
+      </div>
+    </section>
+
+    <section class="panel ai-brief-card">
+      <div class="section-title">
+        <h3>AI Daily Brief</h3>
+        <span>不超过 300 字</span>
+      </div>
+      <p>${esc(buildDailyBrief(data))}</p>
+      <div class="brief-actions">
+        <button class="ghost-button compact-button" type="button">展开全文</button>
+        <button class="ghost-button compact-button" type="button">生成长报告</button>
+        <button class="ghost-button compact-button" type="button">导出 Markdown</button>
       </div>
     </section>
 
     <section class="panel">
       <div class="section-title">
-        <h3>市场指数</h3>
-        <span>用均线、涨跌幅和成交额估算市场风险</span>
+        <h3>Research Queue</h3>
+        <span>按风险最高、买点出现、热门板块、用户关注度排序</span>
       </div>
-      <div class="index-grid">
-        ${(market.indices || []).map(indexCard).join("")}
+      <div class="queue-list">
+        ${queue.map(queueCard).join("") || `<div class="empty">研究队列为空</div>`}
       </div>
+    </section>
+
+    <section class="workspace-two-col">
+      <section class="panel">
+        <div class="section-title">
+          <h3>Hot Sectors</h3>
+          <span>Part 2 将补完整交互</span>
+        </div>
+        <div class="sector-strip">
+          ${(data.sectors || []).slice(0, 4).map(sectorCard).join("")}
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="section-title">
+          <h3>Risk Alerts</h3>
+          <span>风险提示优先于买点提示</span>
+        </div>
+        <div class="risk-alert-list">
+          ${risks.map(riskAlert).join("") || `<div class="empty">当前队列未触发高风险提醒</div>`}
+        </div>
+      </section>
     </section>
 
     <section class="panel">
       <div class="section-title">
-        <h3>今日推荐关注方向</h3>
-        <span>${esc(summary.suggestion || "")}</span>
+        <h3>Watchlist Changes</h3>
+        <span>用户观察池变化</span>
       </div>
-      <div class="sector-strip">
-        ${(data.sectors || []).slice(0, 5).map(sectorCard).join("")}
-      </div>
-    </section>
-
-    <section class="panel">
-      <div class="section-title">
-        <h3>重点关注股票</h3>
-        <span>先加入观察池，再等买点</span>
-      </div>
-      <div class="candidate-list">
-        ${(data.candidates || []).filter((item) => !item.filtered_out).slice(0, 6).map(candidateCard).join("")}
+      <div class="watch-summary">
+        ${metric("观察池股票", fmt(state.watchlist.length))}
+        ${metric("待研究", fmt(state.watchlist.filter((item) => item.status === "等待买点").length))}
+        ${metric("风险升高", fmt(state.watchlist.filter((item) => item.risk_signal === "风险升高").length), "down")}
+        ${metric("下一步", nextActionText(data))}
       </div>
     </section>
   `;
-  bindCandidateActions($("#radarView"));
+  $("#copilotText").textContent = nextActionText(data);
+  bindCandidateActions($("#workspaceView"));
+}
+
+function modeLabel(mode) {
+  const labels = {
+    workspace: "Workspace",
+    market: "Market",
+    sector: "Sector",
+    watchlist: "Watchlist",
+    reports: "Research Reports",
+    review: "Review",
+    settings: "Settings",
+  };
+  return labels[mode] || "Workspace";
+}
+
+function buildDailyBrief(data) {
+  const market = data.market || {};
+  const summary = data.summary || {};
+  const sectors = (data.sectors || []).slice(0, 3).map((item) => item.name).join("、") || "热点待确认";
+  const riskCount = summary.risk_count || 0;
+  return `今日市场情绪为${fmt(market.emotion_score)}分，${market.emotion_label || "处于待确认状态"}。当前值得优先研究的方向包括${sectors}。研究队列中有${fmt(summary.focus_count)}只股票值得继续跟踪，${fmt(summary.buy_signal_count)}只出现买点线索，${fmt(riskCount)}只风险升高。今日建议：${summary.suggestion || "先看板块，再看个股，风险提示优先。"}`;
+}
+
+function buildResearchQueue(data) {
+  return (data.candidates || [])
+    .slice()
+    .sort((a, b) => {
+      const riskDiff = (b.risk_score || 0) - (a.risk_score || 0);
+      if (riskDiff) return riskDiff;
+      const buyDiff = (b.buy_point_score || 0) - (a.buy_point_score || 0);
+      if (buyDiff) return buyDiff;
+      return (b.overall_score || 0) - (a.overall_score || 0);
+    })
+    .slice(0, 8);
+}
+
+function queueCard(item) {
+  const status = (item.risk_score || 0) >= 70 ? "待研究" : (item.buy_point_score || 0) >= 65 ? "跟踪中" : "待研究";
+  const nextStep = (item.risk_score || 0) >= 70 ? "先确认风险是否释放" : (item.buy_point_score || 0) >= 65 ? "观察买点是否继续成立" : "等待板块和资金确认";
+  return `
+    <article class="queue-card">
+      <div>
+        <strong>${esc(item.name)}</strong>
+        <small>${esc(item.code)} · ${esc(item.industry || "行业待确认")}</small>
+      </div>
+      <span>综合 ${esc(fmt(item.overall_score))}</span>
+      <span>${esc(status)}</span>
+      <small>${esc(item.updated_at || "最近分析：当前会话")}</small>
+      <p>${esc(nextStep)}</p>
+      <div class="candidate-actions">
+        <button type="button" data-analyze="${esc(item.code)}">研究</button>
+        <button class="ghost-button" type="button" data-watch="${esc(item.code)}">加入观察池</button>
+      </div>
+    </article>
+  `;
+}
+
+function riskAlert(item) {
+  return `
+    <article class="risk-alert">
+      <strong>${esc(item.name)} ${esc(item.code)}</strong>
+      <p>风险分 ${esc(fmt(item.risk_score))}。${esc(item.candidate_reason)}</p>
+    </article>
+  `;
+}
+
+function nextActionText(data) {
+  const sectors = (data.sectors || []).slice(0, 2).map((item) => item.name).join("、") || "热点板块";
+  const riskCount = data.summary?.risk_count || 0;
+  if (riskCount > 0) return `先处理风险升高股票，再研究${sectors}里的趋势中军。`;
+  return `优先研究${sectors}，把候选股加入观察池，等待买点。`;
 }
 
 function indexCard(item) {
@@ -497,19 +605,43 @@ async function loadRadar() {
   setStatus("正在加载市场情绪、热门板块和候选股票...", true);
   try {
     state.radar = await getJson("/api/radar");
-    renderRadar(state.radar);
-    renderSectors(state.radar);
-    renderScreener(state.radar);
-    renderWatchlist();
-    setStatus("市场雷达已更新。先看板块，再看个股；风险提示优先。");
+    renderWorkspace(state.radar, state.view);
+    setStatus("Research Workspace 已更新。先看市场，再看队列；风险提示优先。");
   } catch (error) {
-    setStatus(`市场雷达加载失败：${error.message}`);
+    setStatus(`Research Workspace 加载失败：${error.message}`);
   }
 }
 
 function init() {
   loadWatchlist();
-  document.querySelectorAll(".tab-button").forEach((button) => button.addEventListener("click", () => showView(button.dataset.view)));
+  document.querySelectorAll(".side-nav").forEach((button) => button.addEventListener("click", () => showView(button.dataset.view)));
+  $("#globalAnalyzeButton").addEventListener("click", () => {
+    $("#stockInput").value = $("#globalStockInput").value.trim();
+    showView("stocks");
+    analyzeFirst();
+  });
+  $("#globalStockInput").addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      $("#stockInput").value = $("#globalStockInput").value.trim();
+      showView("stocks");
+      analyzeFirst();
+    }
+  });
+  $("#toggleCopilot").addEventListener("click", () => $("#aiCopilot").classList.toggle("collapsed"));
+  window.addEventListener("keydown", (event) => {
+    if (event.target && ["INPUT", "TEXTAREA", "SELECT"].includes(event.target.tagName)) return;
+    const keyMap = {
+      "1": "workspace",
+      "2": "market",
+      "3": "sector",
+      "4": "stocks",
+      "5": "watchlist",
+      "6": "reports",
+      "7": "review",
+      "8": "settings",
+    };
+    if (keyMap[event.key]) showView(keyMap[event.key]);
+  });
   $("#analyzeButton").addEventListener("click", analyzeFirst);
   $("#compareButton").addEventListener("click", compareAll);
   loadRadar();
