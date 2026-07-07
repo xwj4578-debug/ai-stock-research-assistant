@@ -1,4 +1,8 @@
+"use client";
+
 import type { ReactNode } from "react";
+import { motion } from "framer-motion";
+import { cardMotion } from "@/lib/motion";
 
 type PanelProps = {
   title?: string;
@@ -10,7 +14,7 @@ type PanelProps = {
 
 export function Panel({ title, eyebrow, action, children, className = "" }: PanelProps) {
   return (
-    <section className={`rounded-2xl border border-workspace-border bg-workspace-panel p-5 shadow-terminal transition hover:border-workspace-border ${className}`}>
+    <motion.section {...cardMotion} className={`rounded-2xl border border-workspace-border bg-workspace-panel p-5 shadow-terminal transition hover:border-workspace-primary ${className}`}>
       {(title || eyebrow || action) && (
         <div className="mb-4 flex items-start justify-between gap-4">
           <div>
@@ -21,6 +25,6 @@ export function Panel({ title, eyebrow, action, children, className = "" }: Pane
         </div>
       )}
       {children}
-    </section>
+    </motion.section>
   );
 }

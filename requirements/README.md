@@ -25,6 +25,7 @@ This directory stores raw requirement inputs by lifecycle area so future iterati
 - `sprints/Sprint-05-Data-Engine-Real-Data-Revised.md`
 - `sprints/Sprint-06-Research-Engine-Revised.md`
 - `sprints/Sprint-07-Replace-Mock-With-Backend-API.md`
+- `sprints/Sprint-08-Product-Experience-Motion-Design.md`
 
 ### Chapters
 

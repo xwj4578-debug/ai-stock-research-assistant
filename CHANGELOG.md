@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.8.0 - Sprint 08 Product Experience & Motion Design
+
+- Added Framer Motion and shared motion presets for page, card, list, and toast transitions.
+- Added design-token polish, animated numbers, unified status badges, and shimmer skeleton loading.
+- Upgraded Market Pulse, Research Queue, Hot Sectors, and AI Copilot with calmer motion and cleaner Chinese copy.
+- Added AI Copilot chat layout with quick actions, Enter-to-send, loading feedback, and typewriter-style responses.
+
 ## v1.7.0 - Sprint 07 Backend API Integration
 
 - Added frontend API client with backend-first loading and mock fallback.

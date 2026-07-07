@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { AppShell } from "@/components/layout/AppShell";
 import { DailyBriefCard } from "@/components/workspace/DailyBriefCard";
 import { EmptyState } from "@/components/workspace/EmptyState";
@@ -17,6 +18,7 @@ import { Watchlist } from "@/components/workspace/Watchlist";
 import { WorkspaceStatusToggle, type WorkspaceStatus } from "@/components/workspace/WorkspaceStatusToggle";
 import { useWorkspaceData } from "@/hooks/useWorkspaceData";
 import { t } from "@/lib/i18n";
+import { pageMotion, toastMotion } from "@/lib/motion";
 import type { HotSector, ResearchQueueItem, WatchlistItem } from "@/types/workspace";
 
 export function WorkspacePage() {
@@ -79,7 +81,7 @@ export function WorkspacePage() {
 
   return (
     <AppShell>
-      <div className="mb-5 flex flex-wrap items-end justify-between gap-4">
+      <motion.div {...pageMotion} className="mb-5 flex flex-wrap items-end justify-between gap-4">
         <div>
           <span className="text-xs font-bold uppercase tracking-[0.18em] text-workspace-primary">{t("nav.workspace")}</span>
           <h1 className="mt-2 text-3xl font-black text-workspace-text">{t("workspace.title")}</h1>
@@ -94,13 +96,13 @@ export function WorkspacePage() {
             </button>
           )}
         </div>
-      </div>
+      </motion.div>
 
       {(status === "loading" || workspace.loading) && <LoadingSkeleton />}
       {status === "empty" && <EmptyState title={t("workspace.emptyTitle")} description={t("workspace.emptyDescription")} />}
       {status === "error" && <ErrorState onRetry={() => setStatus("normal")} />}
       {status === "normal" && !workspace.loading && (
-        <div className="space-y-5">
+        <motion.div {...pageMotion} className="space-y-5">
           <MarketPulseCard data={workspace.marketPulse} />
           <DailyBriefCard
             data={workspace.dailyBrief}
@@ -125,10 +127,16 @@ export function WorkspacePage() {
           <footer className="rounded-lg border border-workspace-border bg-workspace-panel p-3 text-xs leading-6 text-workspace-muted">
             {t("workspace.riskNotice")}
           </footer>
-        </div>
+        </motion.div>
       )}
 
-      {toast && <div className="fixed bottom-5 left-1/2 z-[60] -translate-x-1/2 rounded-xl border border-workspace-border bg-workspace-card px-4 py-3 text-sm font-bold text-workspace-text shadow-terminal">{toast}</div>}
+      <AnimatePresence>
+        {toast && (
+          <motion.div {...toastMotion} className="fixed bottom-5 left-1/2 z-[60] -translate-x-1/2 rounded-xl border border-workspace-border bg-workspace-card px-4 py-3 text-sm font-bold text-workspace-text shadow-terminal">
+            {toast}
+          </motion.div>
+        )}
+      </AnimatePresence>
       <StockResearchDrawer stock={selectedStock} open={Boolean(selectedStock)} onClose={() => setSelectedStock(null)} />
       <SectorDetailModal sector={selectedSector} open={Boolean(selectedSector)} onClose={() => setSelectedSector(null)} />
       <MockReportModal open={Boolean(reportTitle)} title={reportTitle || undefined} onClose={() => setReportTitle(null)} />
