@@ -1,7 +1,7 @@
-from app.data import COMPANIES
-from app.company_profile import fetch_company_profile
-from app.research import build_research_report
-from app.scoring import WEIGHTS, score_company
+from backend.app.data import COMPANIES
+from backend.app.company_profile import fetch_company_profile
+from backend.app.research import build_research_report
+from backend.app.scoring import WEIGHTS, score_company
 
 
 def test_score_has_transparent_weighted_items():

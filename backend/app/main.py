@@ -19,20 +19,21 @@ from .scoring import score_company, serialize_company
 from .stock_universe import find_a_share, find_a_share_in_text, search_a_shares
 from .stock_analysis import analyze_position, analyze_stock, compare_stocks, search_stock
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parents[2]
+PROTOTYPE_DIR = BASE_DIR / "prototype" / "static"
 
 app = FastAPI(title="AI 股票研究助手", version="0.2.0")
-app.mount("/static", StaticFiles(directory=BASE_DIR / "static"), name="static")
+app.mount("/static", StaticFiles(directory=PROTOTYPE_DIR), name="static")
 
 
 @app.get("/")
 def index() -> FileResponse:
-    return FileResponse(BASE_DIR / "static" / "index.html", media_type="text/html")
+    return FileResponse(PROTOTYPE_DIR / "index.html", media_type="text/html")
 
 
 @app.get("/compare")
 def compare_page() -> FileResponse:
-    return FileResponse(BASE_DIR / "static" / "index.html", media_type="text/html")
+    return FileResponse(PROTOTYPE_DIR / "index.html", media_type="text/html")
 
 
 @app.get("/api/health")
