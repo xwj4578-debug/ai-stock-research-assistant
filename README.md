@@ -40,6 +40,17 @@ AlphaLens AI 是一个面向 A 股研究的 AI 股票研究助手。它不是荐
 - Risk Alerts
 - AI Copilot
 
+## Foundation Guide v1.1
+
+长期工程规范已补齐：
+
+- `project-management/`：开发指南、Sprint 模板、编码规范、文档规范、Git 工作流、发布流程、架构原则
+- `project-management/adr/`：Architecture Decision Record
+- `governance/`：愿景、原则、贡献模型、决策流程、路线图策略
+- `examples/`：示例数据、报告和 API 响应
+- `tests/`：长期统一测试入口
+- `docs/research-workspace/`：按章节沉淀 Research Workspace 文档
+
 暂不开发：
 
 - 自动交易
@@ -64,6 +75,10 @@ AlphaLens/
 ├── api/
 ├── agents/
 ├── prompts/
+├── project-management/
+├── governance/
+├── examples/
+├── tests/
 ├── scripts/
 ├── assets/
 └── prototype/

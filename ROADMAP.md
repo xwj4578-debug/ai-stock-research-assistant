@@ -25,6 +25,13 @@
 - Part 1：Workspace Layout、Sidebar、Market Pulse、AI Daily Brief、Research Queue。
 - Part 2：Hot Sectors、Watchlist、AI Copilot、页面交互、Loading / Empty / Error、API 设计。
 
+## v1.1 Project Foundation Guide
+
+- 建立 project-management 长期规范。
+- 建立 governance 项目治理。
+- 建立 ADR 机制。
+- docs 按章节目录长期沉淀。
+
 ## v0.4 UI Foundation
 
 - 建立 Design System。

@@ -1,0 +1,156 @@
+AlphaLens AI Project Foundation Guide Version: 1.1 (Recommended
+Baseline)
+
+================================================== 目标
+==================================================
+
+建立一个能够持续演进 3~5 年的 AI 投资研究平台项目，而不是一次性的 Demo。
+
+本指南描述项目长期约定，而不是某个 Sprint 的临时需求。
+
+================================================== 一、核心理念
+==================================================
+
+1.  Research First（研究优先）
+2.  Explainable AI（可解释 AI）
+3.  AI Assist, Human Decide（AI辅助，人做决策）
+4.  Documentation Driven Development（文档驱动开发）
+5.  Single Source of Truth（docs 为唯一需求来源）
+6.  Modular Architecture（模块化）
+7.  API First（接口优先）
+8.  Testability（可测试）
+9.  Extensibility（可扩展）
+10. Open Source Friendly（适合开源协作）
+
+================================================== 二、推荐仓库结构
+==================================================
+
+docs/ frontend/ backend/ database/ api/ agents/ prompts/ assets/
+scripts/ project-management/ governance/ examples/ tests/
+
+================================================== 三、docs 规范
+==================================================
+
+每个产品章节：
+
+chapter-name/ ├── README.md ├── part-01-.md ├── part-02-.md ├── assets/
+└── prompts/
+
+README 为最终版。 part 为编写过程。
+
+================================================== 四、长期规范目录
+==================================================
+
+project-management/ ├── development-guide.md ├── sprint-template.md ├──
+coding-standard.md ├── document-standard.md ├── git-workflow.md ├──
+release-process.md ├── architecture-principles.md └── adr/
+
+================================================== 五、项目治理目录
+==================================================
+
+governance/ ├── vision.md ├── principles.md ├── contribution-model.md
+├── decision-process.md ├── roadmap-policy.md
+
+================================================== 六、ADR（Architecture
+Decision Record） ==================================================
+
+重大设计决策必须新增 ADR。
+
+例如：
+
+ADR-0001 Research Workflow ADR-0002 Workspace ADR-0003 Design System
+ADR-0004 Multi-Agent ADR-0005 Scoring Model
+
+ADR 不修改历史，仅新增。
+
+================================================== 七、Sprint 交付规范
+==================================================
+
+每个 Sprint：
+
+Sprint-XX/ ├── Sprint.md ├── Sprint.txt ├── Review.txt ├── TODO.md ├──
+CHANGELOG.md └── DECISIONS.md
+
+================================================== 八、Git 规范
+==================================================
+
+分支：
+
+main develop feature/ release/ hotfix/*
+
+Commit 建议：
+
+feat: fix: docs: refactor: test: chore:
+
+================================================== 九、开发顺序
+==================================================
+
+PDS → UI → Database → API → Prompt → Backend → Frontend → Test → Review
+→ Release
+
+================================================== 十、产品设计规范
+==================================================
+
+每个产品文档固定包含：
+
+Overview Goals Business Value User Flow Information Architecture Layout
+Components Interactions States Database API Prompt Codex Tasks
+Acceptance Criteria Future Expansion
+
+================================================== 十一、AI 工程规范
+==================================================
+
+每个 Agent 必须说明：
+
+职责 输入 输出 Prompt 工具 错误处理 边界 评估指标
+
+================================================== 十二、数据库规范
+==================================================
+
+每张表需要：
+
+用途 字段 索引 关系 更新策略 缓存策略
+
+================================================== 十三、API 规范
+==================================================
+
+每个接口：
+
+用途 请求 响应 错误码 权限 缓存 示例
+
+================================================== 十四、UI 规范
+==================================================
+
+统一：
+
+颜色 字体 间距 图标 按钮 卡片 动画 Loading Empty Error
+
+================================================== 十五、质量要求
+==================================================
+
+任何功能完成必须满足：
+
+□ 文档完成 □ API 完成 □ Prompt 完成 □ 测试完成 □ Review 完成 □ CHANGELOG
+更新
+
+================================================== 十六、长期目标
+==================================================
+
+最终形成：
+
+-   Product Design Specification（PDS）
+-   Design System
+-   AI Agent Handbook
+-   Backend Handbook
+-   Frontend Handbook
+-   Database Handbook
+-   API Handbook
+-   Testing Handbook
+
+作为 AlphaLens 唯一工程标准。
+
+================================================== 十七、重要原则
+==================================================
+
+不要为了速度牺牲架构。 不要为了炫技增加复杂度。 每个设计都应有明确价值。
+保持产品一致性。 保持文档与代码同步。

@@ -31,6 +31,18 @@ vX.Y_章节名称.txt
 4. 运行测试。
 5. 提交 PR。
 
+开发顺序：
+
+```text
+PDS -> UI -> Database -> API -> Prompt -> Backend -> Frontend -> Test -> Review -> Release
+```
+
+重大架构决策必须新增：
+
+```text
+project-management/adr/ADR-XXXX-title.md
+```
+
 ## 本地测试
 
 ```powershell

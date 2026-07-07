@@ -22,3 +22,12 @@
 - 原型首页升级为 Workspace 布局。
 - 增加顶部栏、左侧导航、Market Pulse、AI Daily Brief、Research Queue、Risk Alerts 和 AI Copilot。
 - 支持 Sidebar 键盘快捷键 1-8。
+
+## v1.1.0 - Project Foundation Guide
+
+- 增加 `project-management/` 长期工程规范目录。
+- 增加 `governance/` 项目治理目录。
+- 增加 `examples/` 和根级 `tests/` 目录入口。
+- 增加 ADR 机制和前三个 ADR。
+- 增加 Research Workspace 章节化 docs 目录。
+- 归档 `AlphaLens_Project_Foundation_Guide_v1.1.txt`。
