@@ -7,7 +7,8 @@
 - `product-positioning.md`：产品定位
 - `user-research.md`：用户研究
 - `information-architecture.md`：信息架构
-- `design-system.md`：Design System
+- `design/design-system.md`：Design System
+- `design/component-spec.md`：组件规范
 - `page-design.md`：页面设计
 - `ai-agent.md`：AI Agent
 - `database-design.md`：数据库设计

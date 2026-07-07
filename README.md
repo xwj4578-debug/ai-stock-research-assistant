@@ -16,6 +16,18 @@ AlphaLens AI 是一个面向 A 股研究的 AI 股票研究助手。它不是荐
 - 观察池
 - AI 聊天
 
+## v0.2 Sprint 1 Design System
+
+本阶段只建设设计基础，不开发业务功能。交付物：
+
+- `requirements/`：需求迭代归档
+- `docs/design/design-system.md`：设计系统
+- `docs/design/component-spec.md`：组件规范
+- `frontend/src/components/`：组件目录入口
+- `frontend/src/styles/`：样式目录入口
+- `frontend/src/lib/`：前端工具目录入口
+- `frontend/src/types/`：类型目录入口
+
 暂不开发：
 
 - 自动交易
