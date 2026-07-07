@@ -4,6 +4,7 @@ from pathlib import Path
 from dataclasses import replace
 
 from fastapi import FastAPI, Query
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
@@ -30,6 +31,13 @@ BASE_DIR = Path(__file__).resolve().parents[2]
 PROTOTYPE_DIR = BASE_DIR / "prototype" / "static"
 
 app = FastAPI(title="AI 股票研究助手", version="0.2.0")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 app.mount("/static", StaticFiles(directory=PROTOTYPE_DIR), name="static")
 app.include_router(workspace_router)
 

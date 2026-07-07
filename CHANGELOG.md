@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.7.0 - Sprint 07 Backend API Integration
+
+- Added frontend API client with backend-first loading and mock fallback.
+- Added `useWorkspaceData` hook for Market Pulse, Hot Sectors, Research Queue, and Watchlist.
+- Added backend endpoints for `/api/v1/market/overview`, `/api/v1/market/sectors`, `/api/v1/research/queue`, and `/api/v1/research/score/{code}`.
+- Added CORS support for the local Next.js frontend.
+- Added frontend environment example for API base URL and forced mock mode.
+
 ## v1.6.0 - Sprint 06 Research Engine Foundation
 
 - Added configuration-driven Research Engine YAML files for scoring, ranking, risk, recommendation, and market profiles.

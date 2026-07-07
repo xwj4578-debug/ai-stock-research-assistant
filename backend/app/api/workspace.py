@@ -12,6 +12,26 @@ def workspace_v1(module: str | None = None) -> dict:
     return workspace_service.build_workspace_v1(module=module)
 
 
+@router.get("/market/overview")
+def market_overview() -> dict:
+    return workspace_service.get_market_overview()
+
+
+@router.get("/market/sectors")
+def market_sectors() -> list[dict]:
+    return workspace_service.get_hot_sectors()
+
+
+@router.get("/research/queue")
+def research_queue() -> list[dict]:
+    return workspace_service.get_research_queue()
+
+
+@router.get("/research/score/{code}")
+def research_score(code: str) -> dict:
+    return workspace_service.get_research_score(code)
+
+
 @router.get("/watchlist")
 def watchlist(
     page: int = Query(1, ge=1),

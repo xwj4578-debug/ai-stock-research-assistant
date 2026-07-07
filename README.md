@@ -30,6 +30,37 @@ The frontend workspace now supports mock interactions:
 - Switch Normal / Loading / Empty / Error states.
 - Chinese UI copy is managed through `frontend/locales/zh-CN.json` and `frontend/lib/i18n.ts`.
 
+## Sprint 07 Backend API Integration
+
+Workspace frontend now requests the backend by default and falls back to local mock data only when the API is unavailable or `NEXT_PUBLIC_USE_MOCK=true`.
+
+Backend:
+
+```powershell
+python -m pip install -r requirements.txt
+python -m uvicorn backend.app.main:app --reload --port 8000
+```
+
+Frontend:
+
+```powershell
+cd frontend
+npm install
+npm run dev
+```
+
+Open:
+
+```text
+http://localhost:3000
+```
+
+API docs:
+
+```text
+http://localhost:8000/docs
+```
+
 AlphaLens AI 是一个面向 A 股研究的 AI 股票研究助手。它不是荐股或自动交易软件，而是帮助用户从市场、板块、个股、资金、基本面、消息面和风险维度建立研究流程的产品原型。
 
 ## v0.1 Foundation
