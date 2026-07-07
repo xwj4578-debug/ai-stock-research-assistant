@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.4.0 - Sprint 04 Interactive Workspace Mock
+
+- Added interactive mock behavior for daily brief, research queue, sector detail, watchlist, report modal, and AI Copilot.
+- Added Normal / Loading / Empty / Error workspace state toggle.
+- Added `locales/zh-CN.json` and `t()` i18n foundation with Chinese product copy.
+- Localized navigation, module names, search placeholder, buttons, toast, and risk notice.
+
 ## v1.3.0 - Sprint 03 First Workspace Page
 
 - Reorganized `requirements/` into `foundation/`, `sprints/`, and `chapters/`.

@@ -1,16 +1,18 @@
 import type { HotSector } from "@/types/workspace";
+import { t } from "@/lib/i18n";
 import { Panel } from "@/components/workspace/Panel";
 
 type HotSectorsProps = {
   items: HotSector[];
+  onOpen: (item: HotSector) => void;
 };
 
-export function HotSectors({ items }: HotSectorsProps) {
+export function HotSectors({ items, onOpen }: HotSectorsProps) {
   return (
-    <Panel title="Hot Sectors" eyebrow="Market Direction">
+    <Panel title={t("hotSectors.title")} eyebrow={t("hotSectors.eyebrow")}>
       <div className="grid gap-3">
         {items.map((item) => (
-          <article key={item.name} className="rounded-md border border-workspace-border bg-workspace-card p-4">
+          <button key={item.name} className="rounded-md border border-workspace-border bg-workspace-card p-4 text-left transition hover:border-workspace-primary active:scale-[0.99]" type="button" onClick={() => onOpen(item)}>
             <div className="flex items-start justify-between gap-3">
               <div>
                 <strong>{item.name}</strong>
@@ -22,7 +24,7 @@ export function HotSectors({ items }: HotSectorsProps) {
               <span className="rounded-full border border-workspace-border px-2 py-1 text-workspace-muted">热度 {item.score}</span>
               <span className="rounded-full border border-workspace-border px-2 py-1 text-workspace-muted">龙头 {item.leader}</span>
             </div>
-          </article>
+          </button>
         ))}
       </div>
     </Panel>

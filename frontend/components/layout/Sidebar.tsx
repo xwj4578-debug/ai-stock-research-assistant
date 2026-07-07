@@ -1,15 +1,16 @@
 import { BarChart3, Bell, BriefcaseBusiness, FileText, Home, LineChart, Settings, Star } from "lucide-react";
 import clsx from "clsx";
+import { t } from "@/lib/i18n";
 
 const navItems = [
-  { label: "Workspace", icon: Home, active: true },
-  { label: "Market", icon: BarChart3 },
-  { label: "Sector", icon: LineChart },
-  { label: "Stocks", icon: BriefcaseBusiness },
-  { label: "Watchlist", icon: Star },
-  { label: "Research Reports", icon: FileText },
-  { label: "Review", icon: Bell },
-  { label: "Settings", icon: Settings }
+  { label: t("nav.workspace"), icon: Home, active: true },
+  { label: t("nav.market"), icon: BarChart3 },
+  { label: t("nav.sector"), icon: LineChart },
+  { label: t("nav.stocks"), icon: BriefcaseBusiness },
+  { label: t("nav.watchlist"), icon: Star },
+  { label: t("nav.reports"), icon: FileText },
+  { label: t("nav.review"), icon: Bell },
+  { label: t("nav.settings"), icon: Settings }
 ];
 
 export function Sidebar() {

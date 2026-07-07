@@ -1,9 +1,14 @@
 import clsx from "clsx";
 import type { WatchlistItem } from "@/types/workspace";
+import { t } from "@/lib/i18n";
+import { EmptyState } from "@/components/workspace/EmptyState";
 import { Panel } from "@/components/workspace/Panel";
 
 type WatchlistProps = {
   items: WatchlistItem[];
+  onPin: (item: WatchlistItem) => void;
+  onDelete: (item: WatchlistItem) => void;
+  onReport: (item: WatchlistItem) => void;
 };
 
 const riskClass: Record<WatchlistItem["risk"], string> = {
@@ -12,9 +17,10 @@ const riskClass: Record<WatchlistItem["risk"], string> = {
   High: "text-workspace-danger"
 };
 
-export function Watchlist({ items }: WatchlistProps) {
+export function Watchlist({ items, onPin, onDelete, onReport }: WatchlistProps) {
   return (
-    <Panel title="Watchlist" eyebrow="Track Next">
+    <Panel title={t("watchlist.title")} eyebrow={t("watchlist.eyebrow")}>
+      {!items.length && <EmptyState title={t("watchlist.emptyTitle")} description={t("watchlist.emptyDescription")} />}
       <div className="space-y-3">
         {items.map((item) => (
           <article key={item.code} className="rounded-md border border-workspace-border bg-workspace-card p-4">
@@ -30,6 +36,17 @@ export function Watchlist({ items }: WatchlistProps) {
                 Risk {item.risk}
               </span>
               <span className="rounded-full border border-workspace-border px-2 py-1 text-workspace-muted">{item.nextAction}</span>
+            </div>
+            <div className="mt-3 flex flex-wrap gap-2">
+              <button className="h-8 rounded-md border border-workspace-border px-3 text-xs font-bold text-workspace-muted hover:text-workspace-text" type="button" onClick={() => onPin(item)}>
+                {item.pinned ? t("watchlist.unpin") : t("watchlist.pin")}
+              </button>
+              <button className="h-8 rounded-md border border-workspace-border px-3 text-xs font-bold text-workspace-muted hover:text-workspace-text" type="button" onClick={() => onReport(item)}>
+                {t("watchlist.report")}
+              </button>
+              <button className="h-8 rounded-md border border-workspace-danger/40 px-3 text-xs font-bold text-workspace-danger hover:bg-workspace-danger/10" type="button" onClick={() => onDelete(item)}>
+                {t("watchlist.delete")}
+              </button>
             </div>
           </article>
         ))}

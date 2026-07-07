@@ -1,4 +1,5 @@
 import { Bell, Search, UserCircle } from "lucide-react";
+import { t } from "@/lib/i18n";
 
 export function Topbar() {
   return (
@@ -9,7 +10,7 @@ export function Topbar() {
         </div>
         <div>
           <strong className="block text-sm">AlphaLens</strong>
-          <span className="text-xs text-workspace-muted">Research Workspace</span>
+          <span className="text-xs text-workspace-muted">{t("brand.subtitle")}</span>
         </div>
       </div>
 
@@ -18,7 +19,7 @@ export function Topbar() {
         <span className="sr-only">Search</span>
         <input
           className="h-10 w-full rounded-md border border-workspace-border bg-workspace-bg pl-10 pr-4 text-sm text-workspace-text outline-none transition placeholder:text-workspace-muted focus:border-workspace-primary"
-          placeholder="搜索股票 / 板块 / 问 AI"
+          placeholder={t("topbar.search")}
         />
       </label>
 

@@ -1,5 +1,6 @@
 import { Activity, ArrowDownRight, ArrowUpRight, Flame } from "lucide-react";
 import type { MarketPulse } from "@/types/workspace";
+import { t } from "@/lib/i18n";
 import { Panel } from "@/components/workspace/Panel";
 
 type MarketPulseCardProps = {
@@ -18,7 +19,7 @@ function Metric({ label, value, tone = "neutral" }: { label: string; value: stri
 
 export function MarketPulseCard({ data }: MarketPulseCardProps) {
   return (
-    <Panel title="Market Pulse" eyebrow="Today">
+    <Panel title={t("marketPulse.title")} eyebrow={t("marketPulse.eyebrow")}>
       <div className="grid gap-5 xl:grid-cols-[220px_minmax(0,1fr)]">
         <div className="rounded-lg border border-workspace-border bg-gradient-to-b from-[#1D2A45] to-workspace-card p-4">
           <div className="flex items-center gap-2 text-workspace-muted">

@@ -22,6 +22,11 @@ export type ResearchQueueItem = {
   score: number;
   status: string;
   reason: string;
+  sector?: string;
+  conclusion?: string;
+  riseLogic?: string;
+  riskTip?: string;
+  nextStep?: string;
 };
 
 export type HotSector = {
@@ -30,6 +35,10 @@ export type HotSector = {
   score: number;
   leader: string;
   reason: string;
+  trendCore?: string;
+  reboundStock?: string;
+  risk?: string;
+  relatedStocks?: string[];
 };
 
 export type WatchlistItem = {
@@ -38,6 +47,7 @@ export type WatchlistItem = {
   score: number;
   risk: "Low" | "Medium" | "High";
   nextAction: string;
+  pinned?: boolean;
 };
 
 export type WorkspaceData = {

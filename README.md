@@ -18,6 +18,18 @@ http://localhost:3000
 
 This page uses mock data only. It does not connect to real stock data, backend APIs, or real AI. It is for investment research workflow prototyping only and does not constitute investment advice.
 
+## Sprint 04 Interactive Mock
+
+The frontend workspace now supports mock interactions:
+
+- Expand/collapse AI market brief and open a mock long report.
+- Open stock research drawer from today's research tasks.
+- Add, pin, delete, and report from Watchlist.
+- Open hot sector detail modal.
+- Use AI research assistant quick questions and manual mock chat.
+- Switch Normal / Loading / Empty / Error states.
+- Chinese UI copy is managed through `frontend/locales/zh-CN.json` and `frontend/lib/i18n.ts`.
+
 AlphaLens AI 是一个面向 A 股研究的 AI 股票研究助手。它不是荐股或自动交易软件，而是帮助用户从市场、板块、个股、资金、基本面、消息面和风险维度建立研究流程的产品原型。
 
 ## v0.1 Foundation

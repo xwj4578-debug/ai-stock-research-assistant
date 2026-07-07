@@ -1,22 +1,27 @@
 import { Plus, Search } from "lucide-react";
 import type { ResearchQueueItem } from "@/types/workspace";
+import { t } from "@/lib/i18n";
 import { Panel } from "@/components/workspace/Panel";
 
 type ResearchQueueProps = {
   items: ResearchQueueItem[];
+  completedCodes: string[];
+  onStartResearch: (item: ResearchQueueItem) => void;
+  onAddWatch: (item: ResearchQueueItem) => void;
+  onToggleComplete: (item: ResearchQueueItem) => void;
 };
 
-export function ResearchQueue({ items }: ResearchQueueProps) {
+export function ResearchQueue({ items, completedCodes, onStartResearch, onAddWatch, onToggleComplete }: ResearchQueueProps) {
   return (
-    <Panel title="Research Queue" eyebrow="Must Review">
+    <Panel title={t("researchQueue.title")} eyebrow={t("researchQueue.eyebrow")}>
       <div className="space-y-3">
         {items.map((item) => (
-          <article key={item.code} className="grid gap-3 rounded-md border border-workspace-border bg-workspace-card p-4 xl:grid-cols-[minmax(0,1fr)_90px_210px] xl:items-center">
+          <article key={item.code} className={`grid gap-3 rounded-md border border-workspace-border bg-workspace-card p-3 transition xl:grid-cols-[minmax(0,1fr)_78px_300px] xl:items-center ${completedCodes.includes(item.code) ? "opacity-50" : ""}`}>
             <div>
               <div className="flex flex-wrap items-center gap-2">
                 <strong>{item.name}</strong>
                 <span className="rounded-full border border-workspace-border px-2 py-0.5 text-xs text-workspace-muted">{item.code}</span>
-                <span className="rounded-full bg-workspace-primary/15 px-2 py-0.5 text-xs font-semibold text-workspace-primary">{item.status}</span>
+                <span className="rounded-full bg-workspace-primary/15 px-2 py-0.5 text-xs font-semibold text-workspace-primary">{completedCodes.includes(item.code) ? "已完成" : item.status}</span>
               </div>
               <p className="mt-2 text-sm leading-6 text-workspace-muted">{item.reason}</p>
             </div>
@@ -25,13 +30,16 @@ export function ResearchQueue({ items }: ResearchQueueProps) {
               <strong className="text-2xl text-workspace-success">{item.score}</strong>
             </div>
             <div className="flex flex-wrap justify-end gap-2">
-              <button className="inline-flex h-9 items-center gap-2 rounded-md bg-workspace-primary px-3 text-sm font-semibold text-white" type="button">
+              <button className="inline-flex h-9 items-center gap-2 rounded-md bg-workspace-primary px-3 text-sm font-semibold text-white hover:brightness-110 active:scale-[0.98]" type="button" onClick={() => onStartResearch(item)}>
                 <Search className="h-4 w-4" />
-                开始研究
+                {t("researchQueue.start")}
               </button>
-              <button className="inline-flex h-9 items-center gap-2 rounded-md border border-workspace-border px-3 text-sm font-semibold text-workspace-muted" type="button">
+              <button className="inline-flex h-9 items-center gap-2 rounded-md border border-workspace-border px-3 text-sm font-semibold text-workspace-muted hover:text-workspace-text active:scale-[0.98]" type="button" onClick={() => onAddWatch(item)}>
                 <Plus className="h-4 w-4" />
-                加入观察池
+                {t("researchQueue.addWatch")}
+              </button>
+              <button className="h-9 rounded-md border border-workspace-border px-3 text-sm font-semibold text-workspace-muted hover:text-workspace-text active:scale-[0.98]" type="button" onClick={() => onToggleComplete(item)}>
+                {completedCodes.includes(item.code) ? t("researchQueue.restore") : t("researchQueue.complete")}
               </button>
             </div>
           </article>
